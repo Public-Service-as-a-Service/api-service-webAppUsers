@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import se.sundsvall.dept44.test.AbstractAppTest;
 import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
@@ -42,7 +41,7 @@ class UpdateUserIT extends AbstractAppTest {
 
         setupCall()
                 .withServicePath("/api/users/emails/".concat(email))
-                .withHttpMethod(HttpMethod.PUT)
+                .withHttpMethod(HttpMethod.PATCH)
                 .withRequest(REQUEST)
                 .withExpectedResponseStatus(HttpStatus.CREATED)
                 .withExpectedResponse(RESPONSE)
@@ -64,7 +63,7 @@ class UpdateUserIT extends AbstractAppTest {
         assertThat(userRepository.findByPartyId(partyId)).isPresent();
         setupCall()
         .withServicePath("/api/users/partyIds/".concat(partyId))
-                .withHttpMethod(HttpMethod.PUT)
+                .withHttpMethod(HttpMethod.PATCH)
                 .withRequest(REQUEST)
                 .withExpectedResponseStatus(HttpStatus.CREATED)
                 .withExpectedResponse(RESPONSE)
@@ -85,7 +84,7 @@ class UpdateUserIT extends AbstractAppTest {
 
         setupCall()
         .withServicePath("/api/users/emails/".concat("testmail@sundsvall.se"))
-                .withHttpMethod(HttpMethod.PUT)
+                .withHttpMethod(HttpMethod.PATCH)
                 .withRequest(REQUEST)
                 .withExpectedResponseStatus(HttpStatus.NOT_FOUND)
                 .sendRequestAndVerifyResponse();
@@ -98,7 +97,7 @@ class UpdateUserIT extends AbstractAppTest {
         assertThat(userRepository.findByPartyId(partyId)).isPresent();
         setupCall()
                 .withServicePath("/api/users/personalNumbers/" + personalNumber + "?municipalityId=2281")
-                .withHttpMethod(HttpMethod.PUT)
+                .withHttpMethod(HttpMethod.PATCH)
                 .withRequest(REQUEST)
                 .withExpectedResponseStatus(HttpStatus.CREATED)
                 .withExpectedResponse(RESPONSE)

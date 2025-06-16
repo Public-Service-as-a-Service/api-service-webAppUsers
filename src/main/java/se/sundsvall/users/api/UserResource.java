@@ -74,7 +74,7 @@ public class UserResource {
 		return user != null ? ok(user) : ResponseEntity.noContent().build();
 	}
 
-	@PutMapping("users/emails/{email}")
+	@PatchMapping("users/emails/{email}")
 	@Operation(summary = "Update information of a user with Email")
 	@ApiResponse(responseCode = "201", description = "Successful operation", useReturnTypeSchema = true)
 	@Validated
@@ -85,7 +85,7 @@ public class UserResource {
 			.body(user);
 	}
 
-	@PutMapping("users/personalNumbers/{personalNumber}")
+	@PatchMapping("users/personalNumbers/{personalNumber}")
 	@Operation(summary = "Update information of a user with Personal identity number")
 	@ApiResponse(responseCode = "201", description = "Successful operation", useReturnTypeSchema = true)
 	@Validated
@@ -97,7 +97,7 @@ public class UserResource {
 			.body(user);
 	}
 
-	@PutMapping("users/partyIds/{partyId}")
+	@PatchMapping("users/partyIds/{partyId}")
 	@Operation(summary = "Update information of a user with Party Id")
 	@ApiResponse(responseCode = "201", description = "Successful operation", useReturnTypeSchema = true)
 	@Validated

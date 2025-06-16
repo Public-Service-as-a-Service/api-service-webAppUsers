@@ -148,7 +148,7 @@ class UserResourceTest {
 
 		when(userServiceMock.updateUserByEmail(any(UpdateUserRequest.class), eq(email))).thenReturn(userResponse);
 
-		final var response = webTestClient.put()
+		final var response = webTestClient.patch()
 			.uri("api/users/emails/{email}", email)
 			.bodyValue(userRequest)
 			.exchange()
@@ -177,7 +177,7 @@ class UserResourceTest {
 
 		when(userServiceMock.updateUserByPartyId(any(UpdateUserRequest.class), eq(partyId))).thenReturn(userResponse);
 
-		final var response = webTestClient.put()
+		final var response = webTestClient.patch()
 			.uri("api/users/partyIds/{partyId}", partyId)
 			.bodyValue(userRequest)
 			.exchange()
@@ -209,7 +209,7 @@ class UserResourceTest {
 		when(userServiceMock.updateUserByPersonalNumber(any(UpdateUserRequest.class), eq(personalNumber), eq(municipalityId)))
 			.thenReturn(userResponse);
 
-		final var response = webTestClient.put()
+		final var response = webTestClient.patch()
 			.uri(uriBuilder -> uriBuilder
 				.path("api/users/personalNumbers/{personalNumber}")
 				.queryParam("municipalityId", municipalityId)

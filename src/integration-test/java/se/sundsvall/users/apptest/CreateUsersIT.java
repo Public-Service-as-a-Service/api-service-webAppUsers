@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.ActiveProfiles;
 import se.sundsvall.dept44.test.AbstractAppTest;
 import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
 import se.sundsvall.users.Application;
@@ -17,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @WireMockAppTestSuite(files = "classpath:/CreateUsersIT/", classes = Application.class)
 class CreateUsersIT extends AbstractAppTest {
-    private static final String Request = "request.json";
+    private static final String REQUEST = "request.json";
 
     @Autowired
     private UserRepository userRepository;
@@ -30,7 +29,7 @@ class CreateUsersIT extends AbstractAppTest {
         setupCall()
                 .withServicePath("/api/users")
                 .withHttpMethod(HttpMethod.POST)
-                .withRequest(Request)
+                .withRequest(REQUEST)
                 .withExpectedResponseStatus(HttpStatus.CREATED)
                 .sendRequestAndVerifyResponse();
 
@@ -54,7 +53,7 @@ class CreateUsersIT extends AbstractAppTest {
         setupCall()
                 .withServicePath("/api/users")
                 .withHttpMethod(HttpMethod.POST)
-                .withRequest(Request)
+                .withRequest(REQUEST)
                 .withExpectedResponseStatus(HttpStatus.CREATED)
                 .sendRequestAndVerifyResponse();
 
@@ -76,7 +75,7 @@ class CreateUsersIT extends AbstractAppTest {
         setupCall()
         .withServicePath("/api/users")
                 .withHttpMethod(HttpMethod.POST)
-                .withRequest(Request)
+                .withRequest(REQUEST)
                 .withExpectedResponseStatus(HttpStatus.CREATED)
                 .sendRequestAndVerifyResponse();
 
