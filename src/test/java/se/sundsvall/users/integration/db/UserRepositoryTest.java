@@ -1,5 +1,9 @@
 package se.sundsvall.users.integration.db;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace.NONE;
+
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -8,11 +12,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import se.sundsvall.users.integration.db.model.Enum.Status;
 import se.sundsvall.users.integration.db.model.UserEntity;
-
-import java.util.UUID;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace.NONE;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = NONE)
@@ -38,6 +37,7 @@ class UserRepositoryTest {
 	@Test
 	void createUser() {
 		final var userEntity = UserEntity.create()
+			.withPartyId(UUID.randomUUID().toString())
 			.withEmail("Test@testmail.com")
 			.withPhoneNumber("0701740679")
 			.withMunicipalityId("2281")
@@ -46,7 +46,7 @@ class UserRepositoryTest {
 		final var savedEntity = userRepository.save(userEntity);
 		final var parsedEntity = userRepository.findByEmail(savedEntity.getEmail());
 
-		assertThat(savedEntity.getId()).isNotNull();
+		assertThat(savedEntity.getPartyId()).isNotNull();
 		assertThat(savedEntity.getEmail()).isEqualTo("Test@testmail.com");
 		assertThat(savedEntity.getPhoneNumber()).isEqualTo("0701740679");
 		assertThat(savedEntity.getMunicipalityId()).isEqualTo("2281");
@@ -56,7 +56,11 @@ class UserRepositoryTest {
 
 	@Test
 	void updateUser() {
-		final var userEntity = UserEntity.create().withEmail(MAIL_ADRESS_1).withPhoneNumber(PHONE_NUMBER_1).withMunicipalityId(MUNICIPALITY_ID_1).withStatus(STATUS_1);
+		final var userEntity = UserEntity.create()
+			.withPartyId(UUID.randomUUID().toString())
+			.withEmail(MAIL_ADRESS_1).withPhoneNumber(PHONE_NUMBER_1)
+			.withMunicipalityId(MUNICIPALITY_ID_1)
+			.withStatus(STATUS_1);
 
 		final var savedEntity = userRepository.save(userEntity);
 		assertThat(savedEntity.getEmail()).isEqualTo(MAIL_ADRESS_1);
@@ -72,7 +76,7 @@ class UserRepositoryTest {
 		savedEntity.setStatus(STATUS_2);
 
 		final var updatedEntity = userRepository.save(savedEntity);
-		assertThat(updatedEntity.getId()).isEqualTo(savedEntity.getId());
+		assertThat(updatedEntity.getPartyId()).isEqualTo(savedEntity.getPartyId());
 		assertThat(updatedEntity.getEmail()).isEqualTo(MAIL_ADRESS_1);
 		assertThat(updatedEntity.getPhoneNumber()).isEqualTo(PHONE_NUMBER_2);
 		assertThat(updatedEntity.getMunicipalityId()).isEqualTo(MUNICIPALITY_ID_2);

@@ -1,10 +1,8 @@
 package se.sundsvall.users.integration.db.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.UuidGenerator;
-import se.sundsvall.users.integration.db.model.Enum.Status;
-
 import java.io.Serializable;
+import se.sundsvall.users.integration.db.model.Enum.Status;
 
 @Entity
 @Table(name = "users",
@@ -15,9 +13,8 @@ public class UserEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	@Id
-	@UuidGenerator
-	@Column(nullable = false, name = "id")
-	private String id;
+	@Column(nullable = false, name = "party_id")
+	private String partyId;
 
 	@Column(nullable = false, name = "email_address", unique = true)
 	private String email;
@@ -36,16 +33,16 @@ public class UserEntity implements Serializable {
 		return new UserEntity();
 	}
 
-	public String getId() {
-		return id;
+	public String getPartyId() {
+		return partyId;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setPartyId(String partyId) {
+		this.partyId = partyId;
 	}
 
-	public UserEntity withId(final String id) {
-		this.id = id;
+	public UserEntity withPartyId(final String partyId) {
+		this.partyId = partyId;
 		return this;
 	}
 

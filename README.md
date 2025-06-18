@@ -46,7 +46,13 @@ _Service providing functionality for management of users._
 
 ## Dependencies
 
-This microservice has no dependencies to other services
+This microservice depends on the following services:
+- **Citizen**
+    - **Purpose:** Is used to convert the personal number of the user to a partyId.
+    - **Repository:** [https://github.com/Public-Service-as-a-Service/api-service-citizen](https://github.com/Public-Service-as-a-Service/api-service-citizen.git)
+    - **Setup Instructions:** See documentation in repository above for installation and configuration steps.
+
+Ensure that these services are running and properly configured before starting this microservice.
 
 ## API Documentation
 

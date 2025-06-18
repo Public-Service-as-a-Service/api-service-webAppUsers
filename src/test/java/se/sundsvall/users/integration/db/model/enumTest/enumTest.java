@@ -1,14 +1,14 @@
 package se.sundsvall.users.integration.db.model.enumTest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
+
 import jakarta.validation.ConstraintValidatorContext;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.sundsvall.users.api.validation.ValidEnum;
 import se.sundsvall.users.api.validation.impl.EnumValidator;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 

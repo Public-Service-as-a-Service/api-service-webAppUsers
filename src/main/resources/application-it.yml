@@ -17,3 +17,6 @@ spring:
           schema-generation:
             database:
               action: validate
+integration:
+  citizen:
+    base-url: http://localhost:${wiremock.server.port}

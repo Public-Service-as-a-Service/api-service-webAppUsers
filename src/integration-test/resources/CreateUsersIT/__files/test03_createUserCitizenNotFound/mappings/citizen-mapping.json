@@ -1,0 +1,22 @@
+{
+	"request": {
+		"method": "GET",
+		"urlPath": "/199904040345/guid",
+		"queryParameters": {
+			"municipalityId": {
+				"equalTo": "1440"
+			}
+		}
+	},
+	"response": {
+		"status": 404,
+		"jsonBody": {
+			"title": "Not Found",
+			"status": 404,
+			"detail": "No citizen found with personal number: 199904040345"
+		},
+		"headers": {
+			"Content-Type": "application/json"
+		}
+	}
+}

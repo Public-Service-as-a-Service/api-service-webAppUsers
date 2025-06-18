@@ -1,0 +1,18 @@
+{
+	"request": {
+		"method": "GET",
+		"urlPath": "/198001011234/guid",
+		"queryParameters": {
+			"municipalityId": {
+				"equalTo": "2281"
+			}
+		}
+	},
+	"response": {
+		"status": 200,
+		"body": "7225dc69-28d1-4064-a1a8-5c1de5da0e62",
+		"headers": {
+			"Content-Type": "application/json"
+		}
+	}
+}

@@ -2,9 +2,8 @@ package se.sundsvall.users.api.validation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
-import se.sundsvall.users.api.validation.impl.EnumValidator;
-
 import java.lang.annotation.*;
+import se.sundsvall.users.api.validation.impl.EnumValidator;
 
 @Documented
 @Constraint(validatedBy = EnumValidator.class)
