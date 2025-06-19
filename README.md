@@ -48,9 +48,9 @@ _Service providing functionality for management of users._
 
 This microservice depends on the following services:
 - **Citizen**
-    - **Purpose:** Is used to convert the personal number of the user to a partyId.
-    - **Repository:** [https://github.com/Public-Service-as-a-Service/api-service-citizen](https://github.com/Public-Service-as-a-Service/api-service-citizen.git)
-    - **Setup Instructions:** See documentation in repository above for installation and configuration steps.
+- **Purpose:** Is used to convert the personal number of the user to a partyId.
+- **Repository:** [https://github.com/Public-Service-as-a-Service/api-service-citizen](https://github.com/Public-Service-as-a-Service/api-service-citizen.git)
+- **Setup Instructions:** See documentation in repository above for installation and configuration steps.
 
 Ensure that these services are running and properly configured before starting this microservice.
 
@@ -71,7 +71,7 @@ Refer to the [API Documentation](#api-documentation) for detailed information on
 ### Example Request
 
 ```bash
-curl -X GET curl -X POST "http://localhost:8080/api/users" -H "Content-Type: application/json" -d "{\"email\": \"1\"}"
+curl -X GET http://localhost:8080/api/users/emails/example@examplemail.com
 ```
 
 ## Configuration

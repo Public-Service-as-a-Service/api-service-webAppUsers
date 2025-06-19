@@ -64,7 +64,7 @@ public class UserService {
 	public UserResponse getUserByPersonalNumber(String personalNumber, String municipalityId) {
 		var partyId = citizenIntegration.getCitizenPartyId(personalNumber, municipalityId);
 		return userRepository.findByPartyId(partyId).map(userMapper::toUserResponse)
-			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, format(USER_NOT_FOUND, personalNumber)));
+			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, format(USER_NOT_FOUND, "with entered personal number")));
 	}
 
 	public UserResponse getUserByPartyId(String partyId) {
@@ -90,7 +90,7 @@ public class UserService {
 	public UserResponse updateUserByPersonalNumber(UpdateUserRequest updateUserRequest, String personalNumber, String municipalityId) {
 
 		var userEntity = userRepository.findByPartyId(citizenIntegration.getCitizenPartyId(personalNumber, municipalityId))
-			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, format(USER_NOT_FOUND, personalNumber)));
+			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, format(USER_NOT_FOUND, "with entered personal number")));
 
 		userRepository.save(userEntity
 			.withPhoneNumber(updateUserRequest.getPhoneNumber())
