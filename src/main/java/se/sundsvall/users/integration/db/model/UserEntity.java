@@ -29,6 +29,9 @@ public class UserEntity implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private Status status;
 
+	@Column(nullable = false, name = "password")
+	private String password;
+
 	public static UserEntity create() {
 		return new UserEntity();
 	}
@@ -95,6 +98,16 @@ public class UserEntity implements Serializable {
 
 	public UserEntity withStatus(Status status) {
 		this.status = status;
+		return this;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public UserEntity withPassword(String password) {
+		this.password = password;
 		return this;
 	}
 }
