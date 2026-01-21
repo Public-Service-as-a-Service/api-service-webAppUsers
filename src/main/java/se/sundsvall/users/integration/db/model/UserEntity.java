@@ -100,12 +100,15 @@ public class UserEntity implements Serializable {
 		this.status = status;
 		return this;
 	}
+
 	public String getPassword() {
 		return password;
 	}
+
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
 	public UserEntity withPassword(String password) {
 		this.password = password;
 		return this;
