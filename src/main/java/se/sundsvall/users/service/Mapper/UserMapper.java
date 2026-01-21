@@ -28,7 +28,9 @@ public class UserMapper {
 				.withEmail(request.getEmail())
 				.withPhoneNumber(request.getPhoneNumber())
 				.withMunicipalityId(request.getMunicipalityId())
+				.withPassword(request.getPassword())
 				.withStatus(Status.valueOf(request.getStatus().toUpperCase())))
+
 			.orElse(null);
 	}
 }
