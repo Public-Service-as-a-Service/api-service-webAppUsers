@@ -87,6 +87,14 @@ public class UserService {
 		return userMapper.toUserResponse(userEntity);
 	}
 
+	public UserResponse updateUserPassword(String email, String password) {
+		var userEntity = userRepository.findByEmail(email)
+			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, format(USER_NOT_FOUND, email)));
+		userEntity.setPassword(password);
+		userRepository.save(userEntity);
+		return userMapper.toUserResponse(userEntity);
+	}
+
 	public UserResponse updateUserByPersonalNumber(UpdateUserRequest updateUserRequest, String personalNumber, String municipalityId) {
 
 		var userEntity = userRepository.findByPartyId(citizenIntegration.getCitizenPartyId(personalNumber, municipalityId))
