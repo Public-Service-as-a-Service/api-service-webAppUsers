@@ -92,9 +92,9 @@ public class UserService {
 	}
 
 	public void updateUserPassword(String email, String password) {
-		String encryptedPassword = passwordEncryption.encrypt(password);
 		var userEntity = userRepository.findByEmail(email)
 			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, format(USER_NOT_FOUND, email)));
+		final String encryptedPassword = passwordEncryption.encrypt(password);
 		userEntity.setPassword(encryptedPassword);
 		userRepository.save(userEntity);
 	}
