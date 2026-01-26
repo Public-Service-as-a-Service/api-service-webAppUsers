@@ -135,4 +135,13 @@ public class UserResource {
 		userService.deleteUserByPartyId(partyId);
 		return ResponseEntity.noContent().build();
 	}
+
+	@PatchMapping("users/emails/{email}/password")
+	@Operation(summary = "Update a users password with email")
+	@ApiResponse(responseCode = "204", description = "Successful operation", useReturnTypeSchema = true)
+	public ResponseEntity<Void> updateUserPassword(@PathVariable String email, @RequestBody String password) {
+		userService.updateUserPassword(email, password);
+		return ResponseEntity.noContent().build();
+	}
+
 }
