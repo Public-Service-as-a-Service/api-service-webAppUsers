@@ -11,7 +11,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
+import java.security.Principal;
 import org.hibernate.validator.constraints.UUID;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -139,7 +141,10 @@ public class UserResource {
 	@PatchMapping("users/emails/{email}/password")
 	@Operation(summary = "Update a users password with email")
 	@ApiResponse(responseCode = "204", description = "Successful operation", useReturnTypeSchema = true)
-	public ResponseEntity<Void> updateUserPassword(@PathVariable String email, @RequestBody String password) {
+	public ResponseEntity<Void> updateUserPassword(@PathVariable String email, @RequestBody String password, Principal principal) {
+		if (!email.equals(principal.getName())) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
 		userService.updateUserPassword(email, password);
 		return ResponseEntity.noContent().build();
 	}
