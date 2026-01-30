@@ -20,3 +20,9 @@ spring:
 integration:
   citizen:
     base-url: http://localhost:${wiremock.server.port}
+jwt:
+  secret: ThisIsNotMyOneTrueSecretIWillNotTellYouWhatItIs
+  expiration: 86400000
+properties:
+  credentials:
+    secret-key: bosseisrightbutletsdowhatwedo323

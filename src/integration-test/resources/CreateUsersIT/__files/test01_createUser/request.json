@@ -2,5 +2,6 @@
 	"email": "test@sundsvall.se",
 	"phoneNumber": "0701234567",
 	"municipalityId": "2281",
+	"password": "password",
 	"status": "INACTIVE"
 }

@@ -5,18 +5,22 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.util.UUID;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import se.sundsvall.users.Application;
 import se.sundsvall.users.api.model.UpdateUserRequest;
 import se.sundsvall.users.api.model.UserRequest;
 import se.sundsvall.users.api.model.UserResponse;
 import se.sundsvall.users.service.UserService;
+import se.sundsvall.users.utility.JwtUtil;
 
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("junit")
@@ -26,8 +30,16 @@ class UserResourceTest {
 	@MockitoBean
 	private UserService userServiceMock;
 
+	@Mock
+	private JwtUtil jwtUtilMock;
 	@Autowired
 	private WebTestClient webTestClient;
+
+	@BeforeEach
+	public void setup() {
+		ReflectionTestUtils.setField(jwtUtilMock, "secret", "dGVzdC1zZWNyZXQta2V5LXRoYXQtaXMtbG9uZy1lbm91Z2gtZm9yLWhzMjU2LWFsZ29yaXRobQ==");
+		ReflectionTestUtils.setField(jwtUtilMock, "expiration", 3600L);
+	}
 
 	@Test
 	void createUser() {
@@ -36,6 +48,7 @@ class UserResourceTest {
 			.withEmail("test@testmail.com")
 			.withMunicipalityId("2281")
 			.withPhoneNumber("0701740649")
+			.withPassword("password")
 			.withStatus("ACTIVE");
 		final var userResponse = UserResponse.create()
 			.withEmail("test@testmail.com")
@@ -131,6 +144,21 @@ class UserResourceTest {
 
 		assertThat(response).isEqualTo(userResponse);
 		verify(userServiceMock).getUserByPartyId(partyId);
+	}
+
+	@Test
+	void updatePassword() {
+		final var email = "test@email.se";
+		final var password = "password";
+
+		doNothing().when(userServiceMock).updateUserPassword(email, password);
+		final var response = webTestClient.patch()
+			.uri("/api/users/emails/{email}/password", email)
+			.bodyValue(password)
+			.exchange()
+			.expectStatus().isNoContent();
+
+		verify(userServiceMock).updateUserPassword(email, password);
 	}
 
 	@Test

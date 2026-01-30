@@ -11,6 +11,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.zalando.problem.Problem;
+import se.sundsvall.dept44.util.jacoco.ExcludeFromJacocoGeneratedCoverageReport;
 import se.sundsvall.users.api.model.JwtResponse;
 import se.sundsvall.users.api.model.LoginRequest;
 import se.sundsvall.users.service.AuthenticationService;
@@ -52,6 +53,7 @@ public class LoginResource {
 	// Ligger här mest för att testa
 	@PostMapping("/login/Admin")
 	@Operation(summary = "Login for user to test auth")
+	@ExcludeFromJacocoGeneratedCoverageReport
 	public ResponseEntity<String> loginAdmin(@RequestBody @Valid LoginRequest loginRequest, HttpServletResponse response) {
 		String token = authenticationService.login(loginRequest).getToken();
 		ResponseCookie cookie = ResponseCookie.from("token", token)
@@ -66,7 +68,7 @@ public class LoginResource {
 	}
 
 	@Operation(summary = "Login for user")
-	@PostMapping("login")
+	@PostMapping("/login")
 	public ResponseEntity<JwtResponse> login(@RequestBody @Valid LoginRequest loginRequest) {
 		JwtResponse token = authenticationService.login(loginRequest);
 		return ResponseEntity.ok(token);
