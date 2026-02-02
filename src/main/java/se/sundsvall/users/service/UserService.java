@@ -53,7 +53,8 @@ public class UserService {
 		}
 
 		if (userRepository.findByEmail(userRequest.getEmail()).isEmpty() && userRepository.findById(partyId).isEmpty()) {
-			final var userEntity = userRepository.save(userMapper.toUserEntity(userRequest, partyId));
+			String encryptedPassword = passwordEncryption.encrypt(userRequest.getPassword());
+			final var userEntity = userRepository.save(userMapper.toUserEntity(userRequest, partyId, encryptedPassword));
 			return userMapper.toUserResponse(userEntity);
 		}
 		throw Problem.valueOf(CONFLICT, format(USER_ALREADY_EXISTING));

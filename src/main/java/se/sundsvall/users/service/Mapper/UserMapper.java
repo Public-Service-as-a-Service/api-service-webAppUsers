@@ -21,14 +21,14 @@ public class UserMapper {
 			.orElse(null);
 	}
 
-	public UserEntity toUserEntity(UserRequest userRequest, String partyId) {
+	public UserEntity toUserEntity(UserRequest userRequest, String partyId, String encryptedPassword) {
 		return Optional.ofNullable(userRequest)
 			.map(request -> UserEntity.create()
 				.withPartyId(partyId)
 				.withEmail(request.getEmail())
 				.withPhoneNumber(request.getPhoneNumber())
 				.withMunicipalityId(request.getMunicipalityId())
-				.withPassword(request.getPassword())
+				.withPassword(encryptedPassword)
 				.withStatus(Status.valueOf(request.getStatus().toUpperCase())))
 
 			.orElse(null);

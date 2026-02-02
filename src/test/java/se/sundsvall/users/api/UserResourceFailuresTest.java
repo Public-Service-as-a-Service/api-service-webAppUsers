@@ -54,6 +54,7 @@ class UserResourceFailuresTest {
 				tuple("email", "must be a valid Email-adress"),
 				tuple("status", "must be ACTIVE, INACTIVE or SUSPENDED"),
 				tuple("phoneNumber", "must be a valid mobile number"),
+				tuple("password", "must not be blank"),
 				tuple("municipalityId", "must be a valid Municipality-ID"));
 		// TODO verify response violation constraints
 

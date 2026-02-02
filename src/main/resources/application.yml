@@ -21,7 +21,7 @@ spring:
             database:
               action: validate
   flyway:
-    enabled: false
+    enabled: true
 
 
 
