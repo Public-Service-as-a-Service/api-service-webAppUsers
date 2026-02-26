@@ -1,4 +1,4 @@
-package se.sundsvall.users.service;
+package se.sundsvall.users.configuration;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -11,12 +11,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import se.sundsvall.dept44.util.jacoco.ExcludeFromJacocoGeneratedCoverageReport;
 import se.sundsvall.users.utility.JwtUtil;
 
 // Denna klass är mest för att hämta en kaka i swagger kan tas bort sen?
 @Component
-@ExcludeFromJacocoGeneratedCoverageReport
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	private final JwtUtil jwtUtil;
@@ -29,9 +27,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request,
 		HttpServletResponse response,
 		FilterChain filterChain) throws ServletException, IOException {
+
 		String token = null;
 		String email = null;
-		if (request.getCookies() != null) {
+		if (request.getHeader("Authorization") != null) {
+			token = request.getHeader("Authorization").substring(7);
+			email = jwtUtil.extractUsername(token);
+		} else if (request.getCookies() != null) {
 			for (Cookie cookie : request.getCookies()) {
 				if (cookie.getName().equals("token")) {
 					token = cookie.getValue();
@@ -48,5 +50,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 		}
 		filterChain.doFilter(request, response);
+	}
+
+	@Override
+	protected boolean shouldNotFilter(HttpServletRequest request) {
+		String path = request.getServletPath();
+		return path.equals("/api/auth/login") || path.equals("/api/auth/logout");
 	}
 }
