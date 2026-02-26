@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import se.sundsvall.users.utility.JwtUtil;
 
-// Denna klass är mest för att hämta en kaka i swagger kan tas bort sen?
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 

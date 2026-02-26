@@ -11,7 +11,6 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.zalando.problem.Problem;
-import se.sundsvall.dept44.util.jacoco.ExcludeFromJacocoGeneratedCoverageReport;
 import se.sundsvall.users.api.model.LoginRequest;
 import se.sundsvall.users.service.AuthenticationService;
 
@@ -43,8 +42,7 @@ public class LoginResource {
 		content = @Content(schema = @Schema(implementation = Problem.class)))
 	@PostMapping("/login")
 	@Operation(summary = "Login as a user")
-	@ExcludeFromJacocoGeneratedCoverageReport
-	public ResponseEntity<String> loginAdmin(@RequestBody @Valid LoginRequest loginRequest, HttpServletResponse response) {
+	public ResponseEntity<String> login(@RequestBody @Valid LoginRequest loginRequest, HttpServletResponse response) {
 		String token = authenticationService.login(loginRequest).getToken();
 		ResponseCookie cookie = ResponseCookie.from("token", token)
 			.httpOnly(true)
