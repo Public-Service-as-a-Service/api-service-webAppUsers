@@ -7,13 +7,11 @@ import static org.mockito.Mockito.*;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import se.sundsvall.users.Application;
 import se.sundsvall.users.api.model.UpdateUserRequest;
@@ -30,15 +28,20 @@ class UserResourceTest {
 	@MockitoBean
 	private UserService userServiceMock;
 
-	@Mock
+	@MockitoBean
 	private JwtUtil jwtUtilMock;
 	@Autowired
 	private WebTestClient webTestClient;
 
 	@BeforeEach
 	public void setup() {
-		ReflectionTestUtils.setField(jwtUtilMock, "secret", "dGVzdC1zZWNyZXQta2V5LXRoYXQtaXMtbG9uZy1lbm91Z2gtZm9yLWhzMjU2LWFsZ29yaXRobQ==");
-		ReflectionTestUtils.setField(jwtUtilMock, "expiration", 3600L);
+		webTestClient = webTestClient.mutate()
+			.defaultHeader("Authorization", "Bearer test-token")
+			.build();
+
+		when(jwtUtilMock.validateToken(any(), any())).thenReturn(true);
+		when(jwtUtilMock.extractUsername(any())).thenReturn("test@testmail.com");
+
 	}
 
 	@Test

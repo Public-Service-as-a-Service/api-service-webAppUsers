@@ -42,12 +42,42 @@ class LoginResourceTest {
 			.bodyValue(loginRequest)
 			.exchange()
 			.expectStatus().isOk()
-			.expectBody(JwtResponse.class)
-			.returnResult()
-			.getResponseBody();
+			.expectHeader().exists("Set-Cookie")
+			.expectCookie().exists("token")
+			.expectBody(String.class)
+			.isEqualTo("Logged in!")
+			.returnResult();
 
-		assertThat(response).isEqualTo(jwtResponse);
-		verify(authenticationServiceMock).login(any(LoginRequest.class));
-		verifyNoMoreInteractions(authenticationServiceMock);
+		final var setCookie = response.getResponseHeaders().getFirst("Set-Cookie");
+
+		assertThat(setCookie).isNotNull();
+		assertThat(setCookie).contains("token=");
+		assertThat(setCookie).contains("HttpOnly");
+		assertThat(setCookie).contains("Path=/");
+		assertThat(setCookie).contains("SameSite=Strict");
+		assertThat(setCookie).doesNotContain("SemeSite=Secure");
+	}
+
+	@Test
+	void logoutTest() {
+		final var response = webTestClient.post()
+			.uri("/api/auth/logout")
+			.exchange()
+			.expectStatus().isOk()
+			.expectHeader().exists("Set-Cookie")
+			.expectCookie().exists("token")
+			.expectBody(String.class)
+			.isEqualTo("Logged out")
+			.returnResult();
+
+		final var setCookie = response.getResponseHeaders().getFirst("Set-Cookie");
+
+		assertThat(setCookie).isNotNull();
+		assertThat(setCookie).contains("token=");
+		assertThat(setCookie).contains("Max-Age=0");
+		assertThat(setCookie).contains("HttpOnly");
+		assertThat(setCookie).contains("Path=/");
+		assertThat(setCookie).contains("SameSite=Strict");
+		assertThat(setCookie).doesNotContain("Secure");
 	}
 }
