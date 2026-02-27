@@ -11,8 +11,6 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.zalando.problem.Problem;
-import se.sundsvall.dept44.util.jacoco.ExcludeFromJacocoGeneratedCoverageReport;
-import se.sundsvall.users.api.model.JwtResponse;
 import se.sundsvall.users.api.model.LoginRequest;
 import se.sundsvall.users.service.AuthenticationService;
 
@@ -23,26 +21,6 @@ import se.sundsvall.users.service.AuthenticationService;
 	responseCode = "200",
 	description = "Successful Operation",
 	useReturnTypeSchema = true)
-@ApiResponse(
-	responseCode = "400",
-	description = "Bad Request",
-	content = @Content(schema = @Schema(implementation = Problem.class)))
-@ApiResponse(
-	responseCode = "401",
-	description = "Unauthorized",
-	content = @Content(schema = @Schema(implementation = Problem.class)))
-@ApiResponse(
-	responseCode = "403",
-	description = "Forbidden",
-	content = @Content(schema = @Schema(implementation = Problem.class)))
-@ApiResponse(
-	responseCode = "404",
-	description = "Not Found",
-	content = @Content(schema = @Schema(implementation = Problem.class)))
-@ApiResponse(
-	responseCode = "500",
-	description = "Internal Server Error",
-	content = @Content(schema = @Schema(implementation = Problem.class)))
 public class LoginResource {
 	private final AuthenticationService authenticationService;
 
@@ -50,11 +28,21 @@ public class LoginResource {
 		this.authenticationService = authenticationService;
 	}
 
-	// Ligger här mest för att testa
-	@PostMapping("/login/Admin")
-	@Operation(summary = "Login for user to test auth")
-	@ExcludeFromJacocoGeneratedCoverageReport
-	public ResponseEntity<String> loginAdmin(@RequestBody @Valid LoginRequest loginRequest, HttpServletResponse response) {
+	@ApiResponse(
+		responseCode = "400",
+		description = "Bad Request",
+		content = @Content(schema = @Schema(implementation = Problem.class)))
+	@ApiResponse(
+		responseCode = "401",
+		description = "Unauthorized",
+		content = @Content(schema = @Schema(implementation = Problem.class)))
+	@ApiResponse(
+		responseCode = "500",
+		description = "Internal Server Error",
+		content = @Content(schema = @Schema(implementation = Problem.class)))
+	@PostMapping("/login")
+	@Operation(summary = "Login as a user")
+	public ResponseEntity<String> login(@RequestBody @Valid LoginRequest loginRequest, HttpServletResponse response) {
 		String token = authenticationService.login(loginRequest).getToken();
 		ResponseCookie cookie = ResponseCookie.from("token", token)
 			.httpOnly(true)
@@ -67,10 +55,17 @@ public class LoginResource {
 		return ResponseEntity.ok("Logged in!");
 	}
 
-	@Operation(summary = "Login for user")
-	@PostMapping("/login")
-	public ResponseEntity<JwtResponse> login(@RequestBody @Valid LoginRequest loginRequest) {
-		JwtResponse token = authenticationService.login(loginRequest);
-		return ResponseEntity.ok(token);
+	@PostMapping("/logout")
+	@Operation(summary = "Logout")
+	public ResponseEntity<String> logout(HttpServletResponse response) {
+		ResponseCookie deleteCookie = ResponseCookie.from("token", "")
+			.httpOnly(true)
+			.secure(false)
+			.path("/")
+			.maxAge(0)
+			.sameSite("Strict")
+			.build();
+		response.addHeader("Set-Cookie", deleteCookie.toString());
+		return ResponseEntity.ok("Logged out");
 	}
 }
