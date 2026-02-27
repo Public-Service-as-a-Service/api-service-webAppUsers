@@ -35,6 +35,10 @@ public class UserRequest {
 	@ValidEnum(message = "must be ACTIVE, INACTIVE or SUSPENDED", enumClass = Status.class, ignoreCase = true)
 	private String status;
 
+	@Schema(description = "Lösenord", example = "mittLösenord")
+	@NotBlank
+	private String password;
+
 	public static UserRequest create() {
 		return new UserRequest();
 	}
@@ -101,6 +105,19 @@ public class UserRequest {
 
 	public UserRequest withStatus(String status) {
 		this.status = status;
+		return this;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public UserRequest withPassword(String password) {
+		this.password = password;
 		return this;
 	}
 

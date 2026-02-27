@@ -23,3 +23,6 @@ logging:
   level:
     se.sundsvall.users.service.CitizenClient: DEBUG
     org.springframework.cloud.openfeign: DEBUG
+jwt:
+  secret: ThisIsNotMyOneTrueSecretIWillNotTellYouWhatItIs
+  expiration: 86400000

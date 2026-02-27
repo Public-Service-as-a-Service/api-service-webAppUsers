@@ -15,6 +15,7 @@ import se.sundsvall.users.integration.citizen.CitizenIntegration;
 import se.sundsvall.users.integration.db.UserRepository;
 import se.sundsvall.users.integration.db.model.Enum.Status;
 import se.sundsvall.users.service.Mapper.UserMapper;
+import se.sundsvall.users.utility.PasswordEncryption;
 
 @Service
 @Transactional
@@ -26,13 +27,16 @@ public class UserService {
 
 	private final UserMapper userMapper;
 
+	private final PasswordEncryption passwordEncryption;
+
 	private final String USER_NOT_FOUND = "user %s was not found";
 	private final String USER_ALREADY_EXISTING = "user already exists";
 
-	public UserService(UserRepository userRepository, CitizenIntegration citizenIntegration, UserMapper userMapper) {
+	public UserService(UserRepository userRepository, CitizenIntegration citizenIntegration, UserMapper userMapper, PasswordEncryption passwordEncryption) {
 		this.userRepository = userRepository;
 		this.citizenIntegration = citizenIntegration;
 		this.userMapper = userMapper;
+		this.passwordEncryption = passwordEncryption;
 	}
 
 	public UserResponse createUser(UserRequest userRequest) {
@@ -49,7 +53,8 @@ public class UserService {
 		}
 
 		if (userRepository.findByEmail(userRequest.getEmail()).isEmpty() && userRepository.findById(partyId).isEmpty()) {
-			final var userEntity = userRepository.save(userMapper.toUserEntity(userRequest, partyId));
+			String encryptedPassword = passwordEncryption.encrypt(userRequest.getPassword());
+			final var userEntity = userRepository.save(userMapper.toUserEntity(userRequest, partyId, encryptedPassword));
 			return userMapper.toUserResponse(userEntity);
 		}
 		throw Problem.valueOf(CONFLICT, format(USER_ALREADY_EXISTING));
@@ -85,6 +90,14 @@ public class UserService {
 			.withStatus(Status.valueOf(userRequest.getStatus().toUpperCase())));
 
 		return userMapper.toUserResponse(userEntity);
+	}
+
+	public void updateUserPassword(String email, String password) {
+		var userEntity = userRepository.findByEmail(email)
+			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, format(USER_NOT_FOUND, email)));
+		final String encryptedPassword = passwordEncryption.encrypt(password);
+		userEntity.setPassword(encryptedPassword);
+		userRepository.save(userEntity);
 	}
 
 	public UserResponse updateUserByPersonalNumber(UpdateUserRequest updateUserRequest, String personalNumber, String municipalityId) {

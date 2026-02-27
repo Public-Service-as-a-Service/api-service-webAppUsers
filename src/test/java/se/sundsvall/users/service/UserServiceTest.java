@@ -22,6 +22,7 @@ import se.sundsvall.users.integration.db.UserRepository;
 import se.sundsvall.users.integration.db.model.Enum.Status;
 import se.sundsvall.users.integration.db.model.UserEntity;
 import se.sundsvall.users.service.Mapper.UserMapper;
+import se.sundsvall.users.utility.PasswordEncryption;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -34,6 +35,8 @@ class UserServiceTest {
 
 	@Mock
 	private UserMapper userMapperMock;
+	@Mock
+	private PasswordEncryption passwordEncryptionMock;
 
 	@InjectMocks
 	private UserService userService;
@@ -131,9 +134,9 @@ class UserServiceTest {
 
 		when(userRepositoryMock.findByEmail(email)).thenReturn(Optional.empty());
 		when(userRepositoryMock.save(userEntity)).thenReturn(userEntity);
-		when(userMapperMock.toUserEntity(eq(userRequest), anyString())).thenReturn(userEntity);
+		when(userMapperMock.toUserEntity(eq(userRequest), anyString(), anyString())).thenReturn(userEntity);
 		when(userMapperMock.toUserResponse(userEntity)).thenReturn(userResponse);
-
+		when(passwordEncryptionMock.encrypt(userRequest.getPassword())).thenReturn("encryptedPassword");
 		// Act
 		var created = userService.createUser(userRequest);
 
