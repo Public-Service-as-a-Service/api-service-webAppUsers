@@ -5,13 +5,11 @@ import static org.zalando.problem.Status.CONFLICT;
 import static org.zalando.problem.Status.NOT_FOUND;
 
 import jakarta.transaction.Transactional;
-import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.zalando.problem.Problem;
 import se.sundsvall.users.api.model.UpdateUserRequest;
 import se.sundsvall.users.api.model.UserRequest;
 import se.sundsvall.users.api.model.UserResponse;
-import se.sundsvall.users.integration.citizen.CitizenIntegration;
 import se.sundsvall.users.integration.db.UserRepository;
 import se.sundsvall.users.integration.db.model.Enum.Status;
 import se.sundsvall.users.service.Mapper.UserMapper;
@@ -23,8 +21,6 @@ public class UserService {
 
 	private final UserRepository userRepository;
 
-	private final CitizenIntegration citizenIntegration;
-
 	private final UserMapper userMapper;
 
 	private final PasswordEncryption passwordEncryption;
@@ -32,29 +28,17 @@ public class UserService {
 	private final String USER_NOT_FOUND = "user %s was not found";
 	private final String USER_ALREADY_EXISTING = "user already exists";
 
-	public UserService(UserRepository userRepository, CitizenIntegration citizenIntegration, UserMapper userMapper, PasswordEncryption passwordEncryption) {
+	public UserService(UserRepository userRepository, UserMapper userMapper, PasswordEncryption passwordEncryption) {
 		this.userRepository = userRepository;
-		this.citizenIntegration = citizenIntegration;
 		this.userMapper = userMapper;
 		this.passwordEncryption = passwordEncryption;
 	}
 
 	public UserResponse createUser(UserRequest userRequest) {
 
-		String partyId = null;
-		String personalNumber = userRequest.getPersonalNumber();
-		String municipalityId = userRequest.getMunicipalityId();
-
-		if (personalNumber != null && !personalNumber.isBlank()) {
-			partyId = citizenIntegration.getCitizenPartyId(personalNumber, municipalityId);
-		}
-		if (partyId == null) {
-			partyId = UUID.randomUUID().toString();
-		}
-
-		if (userRepository.findByEmail(userRequest.getEmail()).isEmpty() && userRepository.findById(partyId).isEmpty()) {
+		if (userRepository.findByEmail(userRequest.getEmail()).isEmpty()) {
 			String encryptedPassword = passwordEncryption.encrypt(userRequest.getPassword());
-			final var userEntity = userRepository.save(userMapper.toUserEntity(userRequest, partyId, encryptedPassword));
+			final var userEntity = userRepository.save(userMapper.toUserEntity(userRequest, encryptedPassword));
 			return userMapper.toUserResponse(userEntity);
 		}
 		throw Problem.valueOf(CONFLICT, format(USER_ALREADY_EXISTING));
@@ -66,15 +50,9 @@ public class UserService {
 			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, format(USER_NOT_FOUND, email)));
 	}
 
-	public UserResponse getUserByPersonalNumber(String personalNumber, String municipalityId) {
-		var partyId = citizenIntegration.getCitizenPartyId(personalNumber, municipalityId);
-		return userRepository.findByPartyId(partyId).map(userMapper::toUserResponse)
-			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, format(USER_NOT_FOUND, "with entered personal number")));
-	}
-
-	public UserResponse getUserByPartyId(String partyId) {
-		return userRepository.findByPartyId(partyId).map(userMapper::toUserResponse)
-			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, format(USER_NOT_FOUND, partyId)));
+	public UserResponse getUserById(Long id) {
+		return userRepository.findById(id).map(userMapper::toUserResponse)
+			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, format(USER_NOT_FOUND, id)));
 	}
 
 	// UPDATE
@@ -100,26 +78,13 @@ public class UserService {
 		userRepository.save(userEntity);
 	}
 
-	public UserResponse updateUserByPersonalNumber(UpdateUserRequest updateUserRequest, String personalNumber, String municipalityId) {
+	public UserResponse updateUserById(UpdateUserRequest userRequest, Long id) {
 
-		var userEntity = userRepository.findByPartyId(citizenIntegration.getCitizenPartyId(personalNumber, municipalityId))
-			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, format(USER_NOT_FOUND, "with entered personal number")));
-
-		userRepository.save(userEntity
-			.withPhoneNumber(updateUserRequest.getPhoneNumber())
-			.withMunicipalityId(updateUserRequest.getMunicipalityId())
-			.withStatus(Status.valueOf(updateUserRequest.getStatus().toUpperCase())));
-
-		return userMapper.toUserResponse(userEntity);
-	}
-
-	public UserResponse updateUserByPartyId(UpdateUserRequest userRequest, String partyId) {
-
-		var userEntity = userRepository.findByPartyId(partyId)
-			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, format(USER_NOT_FOUND, partyId)));
+		var userEntity = userRepository.findById(id)
+			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, format(USER_NOT_FOUND, id)));
 
 		userRepository.save(userEntity
-			.withPartyId(partyId)
+			.withId(id)
 			.withPhoneNumber(userRequest.getPhoneNumber())
 			.withMunicipalityId(userRequest.getMunicipalityId())
 			.withStatus(Status.valueOf(userRequest.getStatus().toUpperCase())));
@@ -132,11 +97,7 @@ public class UserService {
 		userRepository.deleteByEmail(email);
 	}
 
-	public void deleteUserByPartyId(String partyId) {
-		userRepository.deleteByPartyId(partyId);
-	}
-
-	public void deleteUserByPN(String personalNumber, String municipalityId) {
-		userRepository.deleteByPartyId(citizenIntegration.getCitizenPartyId(personalNumber, municipalityId));
+	public void deleteUserById(Long id) {
+		userRepository.deleteById(id);
 	}
 }

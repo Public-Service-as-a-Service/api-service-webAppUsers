@@ -48,37 +48,20 @@ class DeleteUserIT extends AbstractAppTest {
     }
 
     @Test
-    void test02_DeleteUserByPartyId() {
+    void test02_DeleteUserId() {
 
-        final String partyId = "7225dc69-28d1-4064-a1a8-5c1de5da0e62";
+        final Long id = 1L;
 
-        assertThat(userRepository.findByPartyId(partyId)).isPresent();
+        assertThat(userRepository.findById(id)).isPresent();
 
         setupCall()
-                .withServicePath("/api/users/partyIds/".concat(partyId))
+                .withServicePath("/api/users/ids/" + id)
                 .withHttpMethod(HttpMethod.DELETE)
                 .withExpectedResponseStatus(HttpStatus.NO_CONTENT)
                 .sendRequestAndVerifyResponse();
 
-        assertThat(userRepository.findByPartyId(partyId)).isEmpty();
+        assertThat(userRepository.findById(id)).isEmpty();
 
-
-    }
-
-    @Test
-    void test03_DeleteUserByPersonNumber() {
-
-        final String partyId = "7225dc69-28d1-4064-a1a8-5c1de5da0e62";
-
-        assertThat(userRepository.findByPartyId(partyId)).isPresent();
-
-        setupCall()
-                .withServicePath("/api/users/personalNumbers/198001011234?municipalityId=2281")
-                .withHttpMethod(HttpMethod.DELETE)
-                .withExpectedResponseStatus(HttpStatus.NO_CONTENT)
-                .sendRequestAndVerifyResponse();
-
-        assertThat(userRepository.findByPartyId(partyId)).isEmpty();
 
     }
 }

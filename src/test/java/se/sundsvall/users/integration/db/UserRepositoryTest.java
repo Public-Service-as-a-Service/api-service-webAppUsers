@@ -3,7 +3,6 @@ package se.sundsvall.users.integration.db;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace.NONE;
 
-import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -37,7 +36,6 @@ class UserRepositoryTest {
 	@Test
 	void createUser() {
 		final var userEntity = UserEntity.create()
-			.withPartyId(UUID.randomUUID().toString())
 			.withEmail("Test@testmail.com")
 			.withPhoneNumber("0701740679")
 			.withMunicipalityId("2281")
@@ -46,7 +44,7 @@ class UserRepositoryTest {
 		final var savedEntity = userRepository.save(userEntity);
 		final var parsedEntity = userRepository.findByEmail(savedEntity.getEmail());
 
-		assertThat(savedEntity.getPartyId()).isNotNull();
+		assertThat(savedEntity.getId()).isNotNull();
 		assertThat(savedEntity.getEmail()).isEqualTo("Test@testmail.com");
 		assertThat(savedEntity.getPhoneNumber()).isEqualTo("0701740679");
 		assertThat(savedEntity.getMunicipalityId()).isEqualTo("2281");
@@ -57,7 +55,7 @@ class UserRepositoryTest {
 	@Test
 	void updateUser() {
 		final var userEntity = UserEntity.create()
-			.withPartyId(UUID.randomUUID().toString())
+			.withId(1L)
 			.withEmail(MAIL_ADRESS_1).withPhoneNumber(PHONE_NUMBER_1)
 			.withMunicipalityId(MUNICIPALITY_ID_1)
 			.withStatus(STATUS_1);
@@ -76,7 +74,7 @@ class UserRepositoryTest {
 		savedEntity.setStatus(STATUS_2);
 
 		final var updatedEntity = userRepository.save(savedEntity);
-		assertThat(updatedEntity.getPartyId()).isEqualTo(savedEntity.getPartyId());
+		assertThat(updatedEntity.getId()).isEqualTo(savedEntity.getId());
 		assertThat(updatedEntity.getEmail()).isEqualTo(MAIL_ADRESS_1);
 		assertThat(updatedEntity.getPhoneNumber()).isEqualTo(PHONE_NUMBER_2);
 		assertThat(updatedEntity.getMunicipalityId()).isEqualTo(MUNICIPALITY_ID_2);

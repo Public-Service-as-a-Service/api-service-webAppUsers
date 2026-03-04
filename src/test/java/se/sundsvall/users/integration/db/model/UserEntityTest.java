@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.AllOf.allOf;
 
-import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import se.sundsvall.users.integration.db.model.Enum.Status;
 
@@ -21,20 +20,20 @@ class UserEntityTest {
 
 	@Test
 	void testBuildMethod() {
-		final var guid = UUID.randomUUID().toString();
+		final var id = 1L;
 		final var email = "email";
 		final var phoneNumber = "phoneNumber";
 		final var municipalityId = "municipalityId";
 		final var status = Status.valueOf("ACTIVE");
 
 		final var userEntity = UserEntity.create()
-			.withPartyId(guid)
+			.withId(id)
 			.withEmail(email)
 			.withPhoneNumber(phoneNumber)
 			.withMunicipalityId(municipalityId)
 			.withStatus(status);
 
-		assertThat(userEntity.getPartyId()).isEqualTo(guid);
+		assertThat(userEntity.getId()).isEqualTo(id);
 		assertThat(userEntity.getEmail()).isEqualTo(email);
 		assertThat(userEntity.getPhoneNumber()).isEqualTo(phoneNumber);
 		assertThat(userEntity.getMunicipalityId()).isEqualTo(municipalityId);

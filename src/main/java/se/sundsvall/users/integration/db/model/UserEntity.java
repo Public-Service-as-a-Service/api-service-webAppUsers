@@ -9,12 +9,12 @@ import se.sundsvall.users.integration.db.model.Enum.Status;
 	indexes = {
 		@Index(name = "idx_email_address", columnList = "email_address", unique = true)
 	})
-public class UserEntity implements Serializable {
+public class UserEntity {
 
-	private static final long serialVersionUID = 1L;
-	@Id
-	@Column(nullable = false, name = "party_id")
-	private String partyId;
+    @Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(nullable = false, name = "id")
+	private Long Id;
 
 	@Column(nullable = false, name = "email_address", unique = true)
 	private String email;
@@ -36,16 +36,16 @@ public class UserEntity implements Serializable {
 		return new UserEntity();
 	}
 
-	public String getPartyId() {
-		return partyId;
+	public Long getId() {
+		return Id;
 	}
 
-	public void setPartyId(String partyId) {
-		this.partyId = partyId;
+	public void setId(Long id) {
+		this.Id = id;
 	}
 
-	public UserEntity withPartyId(final String partyId) {
-		this.partyId = partyId;
+	public UserEntity withId(Long id) {
+		this.Id = id;
 		return this;
 	}
 
