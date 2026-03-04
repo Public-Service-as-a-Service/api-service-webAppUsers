@@ -38,33 +38,18 @@ class GetUserIT extends AbstractAppTest {
     }
 
     @Test
-    void test02_getUserByPartyId() {
+    void test02_getUserById() {
 
-        final String partyId = "7225dc69-28d1-4064-a1a8-5c1de5da0e62";
+        final Long id = 1L;
 
 
         setupCall()
-                .withServicePath("/api/users/partyIds/".concat(partyId))
+                .withServicePath("/api/users/ids/" + id)
                 .withHttpMethod(HttpMethod.GET)
                 .withExpectedResponseStatus(HttpStatus.OK)
                 .withExpectedResponse(RESPONSE)
                 .sendRequestAndVerifyResponse();
 
-
-    }
-    @Test
-    void test03_getUserByPersonNumber() {
-
-        final String partyId = "7225dc69-28d1-4064-a1a8-5c1de5da0e62";
-
-
-
-        setupCall()
-                .withServicePath("/api/users/personalNumbers/198001011234?municipalityId=2281")
-                .withHttpMethod(HttpMethod.GET)
-                .withExpectedResponseStatus(HttpStatus.OK)
-                .withExpectedResponse(RESPONSE)
-                .sendRequestAndVerifyResponse();
 
     }
 }

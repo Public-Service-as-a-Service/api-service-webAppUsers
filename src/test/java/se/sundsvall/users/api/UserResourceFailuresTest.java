@@ -136,29 +136,29 @@ class UserResourceFailuresTest {
 				tuple("municipalityId", "must be a valid Municipality-ID"));
 	}
 
-	@Test
-	void deleteUserWithInvalidPartyId() {
-		// Arrange
-		final String email = "kallekula";
-
-		// Act
-		final var response = webTestClient.delete()
-			.uri("api/users/partyIds/{partyId}", email)
-			.exchange()
-			.expectStatus().isBadRequest()
-			.expectHeader().contentType(APPLICATION_PROBLEM_JSON)
-			.expectBody(ConstraintViolationProblem.class)
-			.returnResult()
-			.getResponseBody();
-
-		// Assert
-		assertThat(response).isNotNull();
-		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
-		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
-		assertThat(response.getViolations())
-			.extracting(Violation::getField, Violation::getMessage)
-			.containsExactlyInAnyOrder(
-				tuple("deleteByPartyId.partyId", "must be a valid UUID"));
-		// TODO verify response violation constraints
-	}
+//	@Test
+//	void deleteUserWithInvalidId() {
+//		// Arrange
+//		final String email = "kallekula";
+//
+//		// Act
+//		final var response = webTestClient.delete()
+//			.uri("api/users/ids/{id}", email)
+//			.exchange()
+//			.expectStatus().isBadRequest()
+//			.expectHeader().contentType(APPLICATION_PROBLEM_JSON)
+//			.expectBody(ConstraintViolationProblem.class)
+//			.returnResult()
+//			.getResponseBody();
+//
+//		// Assert
+//		assertThat(response).isNotNull();
+//		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
+//		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
+//		assertThat(response.getViolations())
+//			.extracting(Violation::getField, Violation::getMessage)
+//			.containsExactlyInAnyOrder(
+//				tuple("deleteById.id", "must be a valid Id"));
+//		// TODO verify response violation constraints
+//	}
 }

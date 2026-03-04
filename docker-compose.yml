@@ -1,0 +1,11 @@
+services:
+
+  db:
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: p4ssw0rd
+      MYSQL_OPT_SSL_ENFORCE: 0
+      MARIADB_AUTO_UPGRADE: "1"
+      MARIADB_INITDB_SKIP_TZINFO: "1"
+    ports:
+      - "3307:3306"
