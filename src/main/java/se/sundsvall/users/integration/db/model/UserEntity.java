@@ -1,7 +1,6 @@
 package se.sundsvall.users.integration.db.model;
 
 import jakarta.persistence.*;
-import java.io.Serializable;
 import se.sundsvall.users.integration.db.model.Enum.Status;
 
 @Entity
@@ -11,7 +10,7 @@ import se.sundsvall.users.integration.db.model.Enum.Status;
 	})
 public class UserEntity {
 
-    @Id
+	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(nullable = false, name = "id")
 	private Long Id;

@@ -9,9 +9,9 @@
 		<!-- lookup parent from repository -->
 	</parent>
 	<groupId>se.sundsvall</groupId>
-	<artifactId>template-spring-boot</artifactId>
+	<artifactId>api-service-webAppUser</artifactId>
 	<version>1.0</version>
-	<name>template</name>
+	<name>api-service-webAppUser</name>
 	<properties>
 		<org.testcontainers.mariadb-version>1.19.1</org.testcontainers.mariadb-version>
 	</properties>
