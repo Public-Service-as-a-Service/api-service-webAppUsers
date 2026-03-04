@@ -47,7 +47,6 @@ class UserMapperTest {
 		final var phoneNumber = "99070121212";
 		final var municipalityId = "2281";
 		final var status = "ACTIVE";
-		final String partyId = "d7f2aff6-dab9-4cdf-b366-61cde975a26b";
 		final String password = "password";
 
 		final var userRequest = UserRequest.create().withEmail(email)
@@ -55,10 +54,9 @@ class UserMapperTest {
 			.withMunicipalityId(municipalityId)
 			.withStatus(status);
 		// Act
-		final var result = userMapper.toUserEntity(userRequest, partyId, password);
+		final var result = userMapper.toUserEntity(userRequest, password);
 		// Assert
 		assertThat(result).isNotNull();
-		assertThat(result.getPartyId()).isEqualTo(partyId);
 		assertThat(result.getEmail()).isEqualTo(email);
 		assertThat(result.getPhoneNumber()).isEqualTo(phoneNumber);
 		assertThat(result.getMunicipalityId()).isEqualTo(municipalityId);
@@ -66,7 +64,4 @@ class UserMapperTest {
 		assertThat(result.getPassword()).isEqualTo(password);
 	}
 
-//    @Test
-//    void toUserEntityWhenNull() {
-//    }
 }

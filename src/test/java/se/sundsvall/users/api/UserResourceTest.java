@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,45 +99,18 @@ class UserResourceTest {
 	}
 
 	@Test
-	void getUserByPersonalNumber() {
-		final var personalNumber = "198001011234";
-		final var municipalityId = "2281";
-		final var userResponse = UserResponse.create()
-			.withEmail(personalNumber)
-			.withMunicipalityId("2281")
-			.withPhoneNumber("0701740629")
-			.withStatus("ACTIVE");
-
-		when(userServiceMock.getUserByPersonalNumber(personalNumber, municipalityId)).thenReturn(userResponse);
-
-		final var response = webTestClient.get()
-			.uri(uriBuilder -> uriBuilder
-				.path("api/users/personalNumbers/{personalNumber}")
-				.queryParam("municipalityId", municipalityId)
-				.build(personalNumber))
-			.exchange()
-			.expectStatus().isOk()
-			.expectBody(UserResponse.class)
-			.returnResult()
-			.getResponseBody();
-
-		assertThat(response).isEqualTo(userResponse);
-		verify(userServiceMock).getUserByPersonalNumber(personalNumber, municipalityId);
-	}
-
-	@Test
 	void getUserByPartyId() {
-		final var partyId = UUID.randomUUID().toString();
+		final var id = 1L;
 		final var userResponse = UserResponse.create()
-			.withPartyId(partyId)
+			.withId(id)
 			.withMunicipalityId("2281")
 			.withPhoneNumber("0701740629")
 			.withStatus("ACTIVE");
 
-		when(userServiceMock.getUserByPartyId(partyId)).thenReturn(userResponse);
+		when(userServiceMock.getUserById(id)).thenReturn(userResponse);
 
 		final var response = webTestClient.get()
-			.uri("/api/users/partyIds/{partyId}", partyId)
+			.uri("/api/users/ids/{id}", id)
 			.exchange()
 			.expectStatus().isOk()
 			.expectBody(UserResponse.class)
@@ -146,7 +118,7 @@ class UserResourceTest {
 			.getResponseBody();
 
 		assertThat(response).isEqualTo(userResponse);
-		verify(userServiceMock).getUserByPartyId(partyId);
+		verify(userServiceMock).getUserById(id);
 	}
 
 	@Test
@@ -195,7 +167,7 @@ class UserResourceTest {
 
 	@Test
 	void updateUserByPartyId() {
-		final var partyId = UUID.randomUUID().toString();
+		final var id = 1L;
 		final var userRequest = UpdateUserRequest.create()
 			.withMunicipalityId("2281")
 			.withPhoneNumber("0701740669")
@@ -206,10 +178,10 @@ class UserResourceTest {
 			.withPhoneNumber("0701740619")
 			.withStatus("ACTIVE");
 
-		when(userServiceMock.updateUserByPartyId(any(UpdateUserRequest.class), eq(partyId))).thenReturn(userResponse);
+		when(userServiceMock.updateUserById(any(UpdateUserRequest.class), eq(id))).thenReturn(userResponse);
 
 		final var response = webTestClient.patch()
-			.uri("api/users/partyIds/{partyId}", partyId)
+			.uri("api/users/ids/{id}", id)
 			.bodyValue(userRequest)
 			.exchange()
 			.expectStatus().isCreated()
@@ -218,43 +190,8 @@ class UserResourceTest {
 			.getResponseBody();
 
 		assertThat(response).isEqualTo(userResponse);
-		verify(userServiceMock).updateUserByPartyId(userRequest, partyId);
+		verify(userServiceMock).updateUserById(userRequest, id);
 
-	}
-
-	@Test
-	void updateUserByPersonalNumber() {
-		final var personalNumber = "198001011234";
-		final var municipalityId = "2281";
-		final var userRequest = UpdateUserRequest.create()
-			.withMunicipalityId("2281")
-			.withPhoneNumber("0701740669")
-			.withStatus("ACTIVE");
-		final var userResponse = UserResponse.create()
-			.withPartyId(UUID.randomUUID().toString())
-			.withEmail("test@test.com")
-			.withMunicipalityId("2281")
-			.withPhoneNumber("0701740669")
-			.withStatus("ACTIVE");
-
-		when(userServiceMock.updateUserByPersonalNumber(any(UpdateUserRequest.class), eq(personalNumber), eq(municipalityId)))
-			.thenReturn(userResponse);
-
-		final var response = webTestClient.patch()
-			.uri(uriBuilder -> uriBuilder
-				.path("api/users/personalNumbers/{personalNumber}")
-				.queryParam("municipalityId", municipalityId)
-				.build(personalNumber)).bodyValue(userRequest)
-			.exchange()
-			.expectStatus().isCreated()
-			.expectBody(UserResponse.class)
-			.returnResult()
-			.getResponseBody();
-
-		assertThat(response).isNotNull();
-		assertThat(response).isEqualTo(userResponse);
-
-		verify(userServiceMock).updateUserByPersonalNumber(userRequest, personalNumber, municipalityId);
 	}
 
 	@Test
@@ -275,39 +212,19 @@ class UserResourceTest {
 	}
 
 	@Test
-	void deleteUserByPersonalNumber() {
-		final var personalNumber = "198001011234";
-		final var municipalityId = "2281";
-
-		doNothing().when(userServiceMock).deleteUserByPN(personalNumber, municipalityId);
-		final var response = webTestClient.delete()
-			.uri(uriBuilder -> uriBuilder
-				.path("api/users/personalNumbers/{personalNumber}")
-				.queryParam("municipalityId", municipalityId)
-				.build(personalNumber)).exchange()
-			.expectStatus().isNoContent()
-			.expectBody(UserResponse.class)
-			.returnResult()
-			.getResponseBody();
-
-		verify(userServiceMock).deleteUserByPN(personalNumber, municipalityId);
-
-	}
-
-	@Test
 	void deleteUserByPartyId() {
-		final var partyId = UUID.randomUUID().toString();
+		final var id = 1L;
 
-		doNothing().when(userServiceMock).deleteUserByPartyId(partyId);
+		doNothing().when(userServiceMock).deleteUserById(id);
 		final var response = webTestClient.delete()
-			.uri("api/users/partyIds/{partyId}", partyId)
+			.uri("api/users/ids/{id}", id)
 			.exchange()
 			.expectStatus().isNoContent()
 			.expectBody(UserResponse.class)
 			.returnResult()
 			.getResponseBody();
 
-		verify(userServiceMock).deleteUserByPartyId(partyId);
+		verify(userServiceMock).deleteUserById(id);
 
 	}
 

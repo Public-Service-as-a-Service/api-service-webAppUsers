@@ -14,17 +14,16 @@ public class UserMapper {
 		return Optional.ofNullable(user)
 			.map(entity -> UserResponse.create()
 				.withEmail(entity.getEmail())
-				.withPartyId(entity.getPartyId())
+				.withId(entity.getId())
 				.withPhoneNumber(entity.getPhoneNumber())
 				.withMunicipalityId(entity.getMunicipalityId())
 				.withStatus(String.valueOf(entity.getStatus())))
 			.orElse(null);
 	}
 
-	public UserEntity toUserEntity(UserRequest userRequest, String partyId, String encryptedPassword) {
+	public UserEntity toUserEntity(UserRequest userRequest, String encryptedPassword) {
 		return Optional.ofNullable(userRequest)
 			.map(request -> UserEntity.create()
-				.withPartyId(partyId)
 				.withEmail(request.getEmail())
 				.withPhoneNumber(request.getPhoneNumber())
 				.withMunicipalityId(request.getMunicipalityId())

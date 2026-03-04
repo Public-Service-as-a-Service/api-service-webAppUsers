@@ -11,14 +11,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
-import org.hibernate.validator.constraints.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.zalando.problem.Problem;
 import org.zalando.problem.violations.ConstraintViolationProblem;
-import se.sundsvall.dept44.common.validators.annotation.ValidPersonalNumber;
 import se.sundsvall.users.api.model.UpdateUserRequest;
 import se.sundsvall.users.api.model.UserRequest;
 import se.sundsvall.users.api.model.UserResponse;
@@ -57,20 +55,11 @@ public class UserResource {
 		return user != null ? ok(user) : ResponseEntity.noContent().build();
 	}
 
-	@GetMapping("users/personalNumbers/{personalNumber}")
-	@Operation(summary = "Get information about a user with Personal identity number")
-	public ResponseEntity<UserResponse> getUserByPersonalNumber(
-		@Parameter(description = "Personal Identity Number") @Valid @ValidPersonalNumber @PathVariable String personalNumber,
-		@Parameter(description = "Municipality Id-number") String municipalityId) {
-		var user = userService.getUserByPersonalNumber(personalNumber, municipalityId);
-		return user != null ? ok(user) : ResponseEntity.noContent().build();
-	}
-
-	@GetMapping("users/partyIds/{partyId}")
-	@Operation(summary = "Get information about the user with Party Id")
-	public ResponseEntity<UserResponse> getUserByPartyId(
-		@Parameter(description = "Party Id") @Valid @UUID @PathVariable String partyId) {
-		var user = userService.getUserByPartyId(partyId);
+	@GetMapping("users/ids/{id}")
+	@Operation(summary = "Get information about the user with Id")
+	public ResponseEntity<UserResponse> getUserById(
+		@Parameter(description = "Id") @Valid @PathVariable Long id) {
+		var user = userService.getUserById(id);
 		return user != null ? ok(user) : ResponseEntity.noContent().build();
 	}
 
@@ -85,25 +74,13 @@ public class UserResource {
 			.body(user);
 	}
 
-	@PatchMapping("users/personalNumbers/{personalNumber}")
-	@Operation(summary = "Update information of a user with Personal identity number")
+	@PatchMapping("users/ids/{id}")
+	@Operation(summary = "Update information of a user with Id")
 	@ApiResponse(responseCode = "201", description = "Successful operation", useReturnTypeSchema = true)
 	@Validated
-	public ResponseEntity<UserResponse> updateUserByPersonalNumber(
-		@Parameter(description = "Personal Identity Number") @Valid @ValidPersonalNumber @PathVariable String personalNumber,
-		@Parameter(description = "Municipality Id-number") String municipalityId, @RequestBody @Valid UpdateUserRequest userRequest) {
-		var user = userService.updateUserByPersonalNumber(userRequest, personalNumber, municipalityId);
-		return ResponseEntity.created(UriComponentsBuilder.fromPath("/api/users/").buildAndExpand(userRequest).toUri())
-			.body(user);
-	}
-
-	@PatchMapping("users/partyIds/{partyId}")
-	@Operation(summary = "Update information of a user with Party Id")
-	@ApiResponse(responseCode = "201", description = "Successful operation", useReturnTypeSchema = true)
-	@Validated
-	public ResponseEntity<UserResponse> updateUserByPartyId(
-		@Parameter(description = "Party Id") @Valid @UUID @PathVariable String partyId, @RequestBody @Valid UpdateUserRequest userRequest) {
-		var user = userService.updateUserByPartyId(userRequest, partyId);
+	public ResponseEntity<UserResponse> updateUserById(
+		@Parameter(description = "Id") @PathVariable Long id, @RequestBody @Valid UpdateUserRequest userRequest) {
+		var user = userService.updateUserById(userRequest, id);
 		return ResponseEntity.created(UriComponentsBuilder.fromPath("/api/users/").buildAndExpand(userRequest).toUri())
 			.body(user);
 	}
@@ -117,22 +94,12 @@ public class UserResource {
 		return ResponseEntity.noContent().build();
 	}
 
-	@DeleteMapping("users/personalNumbers/{personalNumber}")
-	@Operation(summary = "Delete a user with Personal identity number")
+	@DeleteMapping("users/ids/{id}")
+	@Operation(summary = "Delete a user with Id")
 	@ApiResponse(responseCode = "204", description = "Successful operation", useReturnTypeSchema = true)
-	public ResponseEntity<Void> deleteByPersonalNumber(
-		@Parameter(description = "Personal Identity Number") @Valid @ValidPersonalNumber @PathVariable String personalNumber,
-		@Parameter(description = "Municipality Id-number") String municipalityId) {
-		userService.deleteUserByPN(personalNumber, municipalityId);
-		return ResponseEntity.noContent().build();
-	}
-
-	@DeleteMapping("users/partyIds/{partyId}")
-	@Operation(summary = "Delete a user with Party Id")
-	@ApiResponse(responseCode = "204", description = "Successful operation", useReturnTypeSchema = true)
-	public ResponseEntity<Void> deleteByPartyId(
-		@Parameter(description = "Party Id") @Valid @UUID @PathVariable String partyId) {
-		userService.deleteUserByPartyId(partyId);
+	public ResponseEntity<Void> deleteById(
+		@Parameter(description = "Id") @Valid @PathVariable Long id) {
+		userService.deleteUserById(id);
 		return ResponseEntity.noContent().build();
 	}
 
