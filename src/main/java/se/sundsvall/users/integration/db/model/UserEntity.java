@@ -9,11 +9,9 @@ import se.sundsvall.users.integration.db.model.Enum.Status;
 	indexes = {
 		@Index(name = "idx_email_address", columnList = "email_address", unique = true)
 	})
-public class UserEntity implements Serializable {
+public class UserEntity {
 
-	private static final Long serialVersionUID = 1L;
-
-	@Id
+    @Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(nullable = false, name = "id")
 	private Long Id;
@@ -46,7 +44,7 @@ public class UserEntity implements Serializable {
 		this.Id = id;
 	}
 
-	public UserEntity withId(final Long id) {
+	public UserEntity withId(Long id) {
 		this.Id = id;
 		return this;
 	}
