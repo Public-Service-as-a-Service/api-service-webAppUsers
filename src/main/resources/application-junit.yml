@@ -16,12 +16,8 @@ spring:
         registration: {}
 server:
   port: 8080
-integration:
-  citizen:
-    base-url: localhost:8081/api/v2/citizen
 logging:
   level:
-    se.sundsvall.users.service.CitizenClient: DEBUG
     org.springframework.cloud.openfeign: DEBUG
 jwt:
   secret: ThisIsNotMyOneTrueSecretIWillNotTellYouWhatItIs
