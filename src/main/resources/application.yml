@@ -12,6 +12,9 @@ spring:
   application:
     name: users
   datasource:
+    url: ${ENV_DB_URL}
+    username: ${ENV_DB_USERNAME}
+    password: ${ENV_DB_PASSWORD}
     driver-class-name: org.mariadb.jdbc.Driver
   jpa:
     properties:
@@ -22,6 +25,3 @@ spring:
               action: validate
   flyway:
     enabled: true
-
-
-
