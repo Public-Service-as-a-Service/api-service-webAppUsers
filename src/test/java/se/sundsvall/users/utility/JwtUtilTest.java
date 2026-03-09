@@ -1,8 +1,5 @@
 package se.sundsvall.users.utility;
 
-import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.mockito.Mockito.*;
-
 import io.jsonwebtoken.*;
 import java.util.Date;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +9,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
+
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class JwtUtilTest {

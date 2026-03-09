@@ -1,13 +1,13 @@
 package se.sundsvall.users.integration.db.model;
 
+import org.junit.jupiter.api.Test;
+import se.sundsvall.users.integration.db.model.Enum.Status;
+
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidGettersAndSetters;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.AllOf.allOf;
-
-import org.junit.jupiter.api.Test;
-import se.sundsvall.users.integration.db.model.Enum.Status;
 
 class UserEntityTest {
 

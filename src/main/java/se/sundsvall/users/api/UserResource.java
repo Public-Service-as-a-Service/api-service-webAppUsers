@@ -1,8 +1,5 @@
 package se.sundsvall.users.api;
 
-import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
-import static org.springframework.http.ResponseEntity.ok;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -15,12 +12,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.zalando.problem.Problem;
-import org.zalando.problem.violations.ConstraintViolationProblem;
+import se.sundsvall.dept44.problem.*;
+import se.sundsvall.dept44.problem.violations.ConstraintViolationProblem;
 import se.sundsvall.users.api.model.UpdateUserRequest;
 import se.sundsvall.users.api.model.UserRequest;
 import se.sundsvall.users.api.model.UserResponse;
 import se.sundsvall.users.service.UserService;
+
+import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
+import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
 @RequestMapping("/api")

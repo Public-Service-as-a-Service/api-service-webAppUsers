@@ -1,8 +1,5 @@
 package se.sundsvall.users.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
-
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +12,9 @@ import se.sundsvall.users.integration.db.UserRepository;
 import se.sundsvall.users.integration.db.model.UserEntity;
 import se.sundsvall.users.utility.JwtUtil;
 import se.sundsvall.users.utility.PasswordEncryption;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class AuthenticationServiceTest {
