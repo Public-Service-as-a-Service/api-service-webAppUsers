@@ -17,7 +17,6 @@ import se.sundsvall.users.integration.db.UserRepository;
 })
 class GetUserIT extends AbstractAppTest {
     private static final String RESPONSE = "response.json";
-    private static final String Expected = "citizen-mapping.json";
     @Autowired
     UserRepository userRepository;
 

@@ -6,7 +6,7 @@ _Service providing functionality for management of users._
 
 ### Prerequisites
 
-- **Java 21 or higher**
+- **Java 25 or higher**
 - **Maven**
 - **MariaDB**(if applicable)
 - **Git**
@@ -46,13 +46,7 @@ _Service providing functionality for management of users._
 
 ## Dependencies
 
-This microservice depends on the following services:
-- **Citizen**
-- **Purpose:** Is used to convert the personal number of the user to a partyId.
-- **Repository:** [https://github.com/Public-Service-as-a-Service/api-service-citizen](https://github.com/Public-Service-as-a-Service/api-service-citizen.git)
-- **Setup Instructions:** See documentation in repository above for installation and configuration steps.
-
-Ensure that these services are running and properly configured before starting this microservice.
+This microservice has no dependencies to other services.
 
 ## API Documentation
 
@@ -128,12 +122,12 @@ This project is licensed under the [MIT License](LICENSE).
 
 ## Code status
 
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Sundsvallskommun_YOUR-PROJECT-ID&metric=alert_status)](https://sonarcloud.io/summary/overall?id=Sundsvallskommun_YOUR-PROJECT-ID)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=Sundsvallskommun_YOUR-PROJECT-ID&metric=reliability_rating)](https://sonarcloud.io/summary/overall?id=Sundsvallskommun_YOUR-PROJECT-ID)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=Sundsvallskommun_YOUR-PROJECT-ID&metric=security_rating)](https://sonarcloud.io/summary/overall?id=Sundsvallskommun_YOUR-PROJECT-ID)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Sundsvallskommun_YOUR-PROJECT-ID&metric=sqale_rating)](https://sonarcloud.io/summary/overall?id=Sundsvallskommun_YOUR-PROJECT-ID)
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=Sundsvallskommun_YOUR-PROJECT-ID&metric=vulnerabilities)](https://sonarcloud.io/summary/overall?id=Sundsvallskommun_YOUR-PROJECT-ID)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=Sundsvallskommun_YOUR-PROJECT-ID&metric=bugs)](https://sonarcloud.io/summary/overall?id=Sundsvallskommun_YOUR-PROJECT-ID)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Public-Service-as-a-Service_api-service-webAppUsers&metric=alert_status)](https://sonarcloud.io/summary/overall?id=Public-Service-as-a-Service_api-service-webAppUsers)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=Public-Service-as-a-Service_api-service-webAppUsers&metric=reliability_rating)](https://sonarcloud.io/summary/overall?id=Public-Service-as-a-Service_api-service-webAppUsers)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=Public-Service-as-a-Service_api-service-webAppUsers&metric=security_rating)](https://sonarcloud.io/summary/overall?id=Public-Service-as-a-Service_api-service-webAppUsers)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Public-Service-as-a-Service_api-service-webAppUsers&metric=sqale_rating)](https://sonarcloud.io/summary/overall?id=Public-Service-as-a-Service_api-service-webAppUsers)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=Public-Service-as-a-Service_api-service-webAppUsers&metric=vulnerabilities)](https://sonarcloud.io/summary/overall?id=Public-Service-as-a-Service_api-service-webAppUsers)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=Public-Service-as-a-Service_api-service-webAppUsers&metric=bugs)](https://sonarcloud.io/summary/overall?id=Public-Service-as-a-Service_api-service-webAppUsers)
 
 ---
 
