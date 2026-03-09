@@ -23,7 +23,7 @@ import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping(path = "/api", produces = APPLICATION_PROBLEM_JSON_VALUE)
 @Validated
 @Tag(name = "Users", description = "Resources for handling Users")
 @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(oneOf = {
@@ -33,6 +33,7 @@ import static org.springframework.http.ResponseEntity.ok;
 @ApiResponse(responseCode = "503", description = "Server Error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 public class UserResource {
 	private final UserService userService;
+	private static final String PATH = "/api/users/";
 
 	public UserResource(UserService userService) {
 		this.userService = userService;
@@ -44,7 +45,7 @@ public class UserResource {
 	@ApiResponse(responseCode = "409", description = "Already exists", useReturnTypeSchema = true)
 	public ResponseEntity<UserResponse> createUser(@RequestBody @Valid UserRequest userRequest) {
 		final var user = userService.createUser(userRequest);
-		return ResponseEntity.created(UriComponentsBuilder.fromPath("/api/users/").buildAndExpand(userRequest).toUri())
+		return ResponseEntity.created(UriComponentsBuilder.fromPath(PATH).buildAndExpand(userRequest).toUri())
 			.body(user);
 	}
 
@@ -70,7 +71,7 @@ public class UserResource {
 	public ResponseEntity<UserResponse> updateUserByEmail(
 		@Parameter(description = "Email-address") @Valid @Email @PathVariable String email, @RequestBody @Valid UpdateUserRequest userRequest) {
 		var user = userService.updateUserByEmail(userRequest, email);
-		return ResponseEntity.created(UriComponentsBuilder.fromPath("/api/users/").buildAndExpand(userRequest).toUri())
+		return ResponseEntity.created(UriComponentsBuilder.fromPath(PATH).buildAndExpand(userRequest).toUri())
 			.body(user);
 	}
 
@@ -81,7 +82,7 @@ public class UserResource {
 	public ResponseEntity<UserResponse> updateUserById(
 		@Parameter(description = "Id") @PathVariable Long id, @RequestBody @Valid UpdateUserRequest userRequest) {
 		var user = userService.updateUserById(userRequest, id);
-		return ResponseEntity.created(UriComponentsBuilder.fromPath("/api/users/").buildAndExpand(userRequest).toUri())
+		return ResponseEntity.created(UriComponentsBuilder.fromPath(PATH).buildAndExpand(userRequest).toUri())
 			.body(user);
 	}
 

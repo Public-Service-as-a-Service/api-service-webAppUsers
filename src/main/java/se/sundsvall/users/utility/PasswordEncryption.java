@@ -1,6 +1,7 @@
 package se.sundsvall.users.utility;
 
 import java.nio.charset.StandardCharsets;
+import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
 import java.util.Base64;
 import javax.crypto.Cipher;
@@ -17,6 +18,7 @@ public class PasswordEncryption {
 	private static final int NONCE_LEN = 12; // bytes
 
 	private final CredentialsProperties credentialsProperties;
+	private final SecureRandom random = new SecureRandom();
 
 	public PasswordEncryption(CredentialsProperties credentialsProperties) {
 		this.credentialsProperties = credentialsProperties;
@@ -28,7 +30,7 @@ public class PasswordEncryption {
 
 	public String encrypt(final String password) {
 		final var key = getSecretKeySpec();
-		final var random = new SecureRandom();
+
 		final var nonce = new byte[NONCE_LEN];
 		random.nextBytes(nonce);
 
@@ -39,8 +41,8 @@ public class PasswordEncryption {
 			cipher = Cipher.getInstance(ENCRYPT_ALGO);
 			cipher.init(Cipher.ENCRYPT_MODE, key, ivParameterSpec);
 			messageCipher = cipher.doFinal(password.getBytes(StandardCharsets.UTF_8));
-		} catch (Exception e) {
-			throw new RuntimeException(e);
+		} catch (final GeneralSecurityException e) {
+			throw new EncryptionException("Something went wrong encrypting input", e);
 		}
 
 		final var cipherText = new byte[messageCipher.length + NONCE_LEN];
@@ -72,8 +74,8 @@ public class PasswordEncryption {
 			cipher = Cipher.getInstance(ENCRYPT_ALGO);
 			cipher.init(Cipher.DECRYPT_MODE, key, ivParameterSpec);
 			return new String(cipher.doFinal(messageCipher));
-		} catch (Exception e) {
-			throw new RuntimeException(e);
+		} catch (GeneralSecurityException e) {
+			throw new EncryptionException("Something went wrong decrypting input", e);
 		}
 
 	}
