@@ -1,19 +1,17 @@
 package se.sundsvall.users.integration.db;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace.NONE;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.transaction.annotation.Transactional;
 import se.sundsvall.users.integration.db.model.Enum.Status;
 import se.sundsvall.users.integration.db.model.UserEntity;
 
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = NONE)
+import static org.assertj.core.api.Assertions.assertThat;
+
+@SpringBootTest
 @ActiveProfiles("junit")
 @Sql(scripts = {
 	"/db/script/truncate.sql",
@@ -97,6 +95,7 @@ class UserRepositoryTest {
 	}
 
 	@Test
+	@Transactional
 	void deleteUser() {
 		assertThat(userRepository.findByEmail(MAIL_ADRESS_2)).isPresent();
 		userRepository.deleteByEmail(MAIL_ADRESS_2);

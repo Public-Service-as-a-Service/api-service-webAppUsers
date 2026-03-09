@@ -1,6 +1,4 @@
-package se.sundsvall.users.service.Mapper;
-
-import static org.assertj.core.api.Assertions.assertThat;
+package se.sundsvall.users.service.mapper;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,6 +7,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import se.sundsvall.users.api.model.UserRequest;
 import se.sundsvall.users.integration.db.model.Enum.Status;
 import se.sundsvall.users.integration.db.model.UserEntity;
+import se.sundsvall.users.service.Mapper.UserMapper;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 class UserMapperTest {

@@ -1,15 +1,15 @@
 package se.sundsvall.users.service;
 
-import static org.zalando.problem.Status.UNAUTHORIZED;
-
 import org.springframework.stereotype.Service;
-import org.zalando.problem.Problem;
+import se.sundsvall.dept44.problem.*;
 import se.sundsvall.users.api.model.JwtResponse;
 import se.sundsvall.users.api.model.LoginRequest;
 import se.sundsvall.users.integration.db.UserRepository;
 import se.sundsvall.users.integration.db.model.UserEntity;
 import se.sundsvall.users.utility.JwtUtil;
 import se.sundsvall.users.utility.PasswordEncryption;
+
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Service
 public class AuthenticationService {
