@@ -5,8 +5,6 @@ spring:
   datasource:
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
     url: jdbc:tc:mariadb:10.6.4:///junitdb
-    username: test
-    password: test
   jpa:
     hibernate:
       ddl-auto: validate
