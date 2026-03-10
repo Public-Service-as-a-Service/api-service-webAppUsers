@@ -89,6 +89,21 @@ Configuration is crucial for the application to run successfully. Ensure all nec
       username: your_db_username
       password: your_db_password
   ```
+- **Additional Configuratio**
+
+```yaml
+properties:
+  credentials:
+    secret-key: secret_key #used to encrypt password
+
+user: #used to create a user at start-up
+  credentials:
+    email:  user_email
+    password: user_password
+jwt: #used to generate token
+  secret: jwt_secret
+  expiration: jwt_expiration
+```
 
 ### Database Initialization
 
