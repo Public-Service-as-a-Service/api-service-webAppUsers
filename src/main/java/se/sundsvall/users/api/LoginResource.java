@@ -15,7 +15,7 @@ import se.sundsvall.users.api.model.LoginRequest;
 import se.sundsvall.users.service.AuthenticationService;
 
 @RestController()
-@RequestMapping("/api/auth")
+@RequestMapping("/api/users/auth")
 @Tag(name = "Login", description = "Endpoint for user login")
 @ApiResponse(
 	responseCode = "200",
@@ -46,7 +46,7 @@ public class LoginResource {
 		String token = authenticationService.login(loginRequest).getToken();
 		ResponseCookie cookie = ResponseCookie.from("token", token)
 			.httpOnly(true)
-			.secure(false)
+			.secure(true)
 			.path("/")
 			.sameSite("Strict")
 			.maxAge(3600)
@@ -60,7 +60,7 @@ public class LoginResource {
 	public ResponseEntity<String> logout(HttpServletResponse response) {
 		ResponseCookie deleteCookie = ResponseCookie.from("token", "")
 			.httpOnly(true)
-			.secure(false)
+			.secure(true)
 			.path("/")
 			.maxAge(0)
 			.sameSite("Strict")
