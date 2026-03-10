@@ -40,16 +40,4 @@ public class SecurityConfig {
 			.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 			.build();
 	}
-
-	@Bean
-	@Profile("it")
-	@Order(Ordered.HIGHEST_PRECEDENCE)
-	public SecurityFilterChain securityFilterChainTest(HttpSecurity http) throws Exception {
-		return http
-			.securityMatcher("/api/**")
-			.csrf(AbstractHttpConfigurer::disable)
-			.authorizeHttpRequests(auth -> auth
-				.anyRequest().permitAll())
-			.build();
-	}
 }
