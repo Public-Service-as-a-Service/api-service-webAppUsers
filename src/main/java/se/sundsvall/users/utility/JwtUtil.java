@@ -20,15 +20,15 @@ public class JwtUtil {
 	@Value("${jwt.expiration}")
 	private Long expiration;
 
-	public String generateToken(String username) {
+	public String generateToken(String email) {
 		Map<String, Object> claims = new HashMap<>();
-		return createToken(claims, username);
+		return createToken(claims, email);
 	}
 
-	private String createToken(Map<String, Object> claims, String subject) {
+	private String createToken(Map<String, Object> claims, String email) {
+		claims.put("email", email);
 		return Jwts.builder()
 			.claims(claims)
-			.subject(subject)
 			.issuedAt(new Date(System.currentTimeMillis()))
 			.expiration(new Date(System.currentTimeMillis() + expiration))
 			.signWith(getSignKey())
@@ -41,7 +41,7 @@ public class JwtUtil {
 	}
 
 	public String extractUsername(String token) {
-		return extractClaim(token, Claims::getSubject);
+		return extractClaim(token, claims -> claims.get("email", String.class));
 	}
 
 	public Date extractExpiration(String token) {
@@ -67,9 +67,9 @@ public class JwtUtil {
 		return extractExpiration(token).before(new Date());
 	}
 
-	public Boolean validateToken(String token, String username) {
+	public Boolean validateToken(String token, String email) {
 		final String extractedUsername = extractUsername(token);
-		return (extractedUsername.equals(username) && !isTokenExpired(token));
+		return (extractedUsername.equals(email) && !isTokenExpired(token));
 	}
 
 }
