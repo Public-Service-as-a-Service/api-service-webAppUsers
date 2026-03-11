@@ -89,7 +89,7 @@ Configuration is crucial for the application to run successfully. Ensure all nec
       username: your_db_username
       password: your_db_password
   ```
-- **Additional Configuratio**
+- **Additional Configuration**
 
 ```yaml
 properties:
