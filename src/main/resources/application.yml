@@ -1,13 +1,7 @@
-#========================================
-# General settings
-#========================================
 logging:
   level:
     root: INFO
-openapi:
-  name: ${spring.application.name}
-  title: ${spring.application.name}
-  version: '@project.version@'
+
 spring:
   application:
     name: users
@@ -25,3 +19,20 @@ spring:
               action: validate
   flyway:
     enabled: true
+
+properties:
+  credentials:
+    secret-key: ${CREDENTIALS_SECRET_KEY}
+
+user:
+  credentials:
+    email:  ${USER_CREDENTIALS_EMAIL}
+    password: ${USER_CREDENTIALS_PASSWORD}
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION}
+
+openapi:
+  name: ${spring.application.name}
+  title: ${spring.application.name}
+  version: '@project.version@'

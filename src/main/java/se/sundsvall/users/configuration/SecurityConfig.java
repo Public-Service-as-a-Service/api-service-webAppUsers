@@ -33,7 +33,7 @@ public class SecurityConfig {
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.authorizeHttpRequests(auth -> auth
 				// createUser är med så att det går att skapa användare i dev, bör tas bort vid prod
-				.requestMatchers("/api/auth/**", "/api/users").permitAll()
+				.requestMatchers("/api/users/auth/**", "/api/users").permitAll()
 				.anyRequest().authenticated())
 			.exceptionHandling(ex -> ex
 				.authenticationEntryPoint((request, response, authException) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized")))
