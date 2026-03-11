@@ -19,7 +19,7 @@ class LoginIT extends AbstractAppTest {
     void test01_loginSuccess() {
 
         setupCall()
-                .withServicePath("/api/auth/login")
+                .withServicePath("/api/users/auth/login")
                 .withHttpMethod(HttpMethod.POST)
                 .withRequest("request.json")
                 .withExpectedResponseStatus(HttpStatus.OK)
@@ -28,7 +28,7 @@ class LoginIT extends AbstractAppTest {
     @Test
     void test02_loginFailed() {
         setupCall()
-                .withServicePath("/api/auth/login")
+                .withServicePath("/api/users/auth/login")
                 .withHttpMethod(HttpMethod.POST)
                 .withRequest("request.json")
                 .withExpectedResponseStatus(HttpStatus.UNAUTHORIZED)
@@ -38,7 +38,7 @@ class LoginIT extends AbstractAppTest {
     @Test
     void test03_logoutSuccess() {
         setupCall()
-                .withServicePath("/api/auth/logout")
+                .withServicePath("/api/users/auth/logout")
                 .withHttpMethod(HttpMethod.POST)
                 .withExpectedResponseStatus(HttpStatus.OK)
                 .sendRequestAndVerifyResponse();

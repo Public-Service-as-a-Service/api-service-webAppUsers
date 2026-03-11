@@ -87,7 +87,7 @@ public class JwtUtilTest {
 		final var email = "test@email.se";
 		final var token = jwtUtil.generateToken(email);
 
-		final var subject = jwtUtil.extractClaim(token, Claims::getSubject);
+		final var subject = jwtUtil.extractClaim(token, claims -> claims.get("email", String.class));
 		assertThat(subject).isEqualTo(email);
 	}
 }

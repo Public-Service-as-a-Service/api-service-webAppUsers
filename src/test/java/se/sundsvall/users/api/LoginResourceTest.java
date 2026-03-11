@@ -39,7 +39,7 @@ class LoginResourceTest {
 
 		when(authenticationServiceMock.login(any(LoginRequest.class))).thenReturn(jwtResponse);
 		final var response = webTestClient.post()
-			.uri("/api/auth/login")
+			.uri("/api/users/auth/login")
 			.contentType(APPLICATION_JSON)
 			.bodyValue(loginRequest)
 			.exchange()
@@ -63,7 +63,7 @@ class LoginResourceTest {
 	@Test
 	void logoutTest() {
 		final var response = webTestClient.post()
-			.uri("/api/auth/logout")
+			.uri("/api/users/auth/logout")
 			.exchange()
 			.expectStatus().isOk()
 			.expectHeader().exists("Set-Cookie")
@@ -80,6 +80,6 @@ class LoginResourceTest {
 		assertThat(setCookie).contains("HttpOnly");
 		assertThat(setCookie).contains("Path=/");
 		assertThat(setCookie).contains("SameSite=Strict");
-		assertThat(setCookie).doesNotContain("Secure");
+		assertThat(setCookie).contains("Secure");
 	}
 }
