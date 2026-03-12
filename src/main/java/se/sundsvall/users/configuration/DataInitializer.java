@@ -11,7 +11,7 @@ import se.sundsvall.users.service.UserService;
 import se.sundsvall.users.utility.PasswordEncryption;
 
 @Component
-@Profile("!junit & !it")
+@Profile("!(junit | it)")
 public class DataInitializer implements CommandLineRunner {
 	@Value("${user.credentials.email}")
 	String email;
