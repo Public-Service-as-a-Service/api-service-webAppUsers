@@ -1,5 +1,6 @@
 package se.sundsvall.users.configuration;
 
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,8 +10,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 import se.sundsvall.users.integration.db.UserRepository;
+import se.sundsvall.users.integration.db.model.Enum.Role;
 import se.sundsvall.users.integration.db.model.Enum.Status;
 import se.sundsvall.users.integration.db.model.UserEntity;
+import se.sundsvall.users.service.UserService;
 import se.sundsvall.users.utility.PasswordEncryption;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,10 +30,13 @@ class DataInitializerTest {
 	private DataInitializer dataInitializer;
 
 	@Mock
-	private PasswordEncryption passwordEncryption;
+	private UserRepository userRepository;
 
 	@Mock
-	private UserRepository userRepository;
+	private UserService userService;
+
+	@Mock
+	private PasswordEncryption passwordEncryption;
 
 	@BeforeEach
 	void setUp() {
@@ -39,8 +45,8 @@ class DataInitializerTest {
 	}
 
 	@Test
-	void createUserWhenDatabaseIsEmpty() {
-		when(userRepository.count()).thenReturn(0L);
+	void createUserWhenNotExists() {
+		when(userRepository.findByEmail("test@example.se")).thenReturn(Optional.empty());
 		when(passwordEncryption.encrypt("password")).thenReturn("encryptedPassword");
 
 		dataInitializer.run();
@@ -53,12 +59,14 @@ class DataInitializerTest {
 		assertThat(savedUser.getMunicipalityId()).isEqualTo("2281");
 		assertThat(savedUser.getPhoneNumber()).isEqualTo("0701234567");
 		assertThat(savedUser.getStatus()).isEqualTo(Status.ACTIVE);
+		assertThat(savedUser.getRole()).isEqualTo(Role.ADMIN);
 		assertThat(savedUser.getPassword()).isEqualTo("encryptedPassword");
 	}
 
 	@Test
-	void doNotCreateUserWhenDatabaseIsNotEmpty() {
-		when(userRepository.count()).thenReturn(1L);
+	void doNotSaveWhenUserAlreadyHasAdminRole() {
+		var existingUser = UserEntity.create().withEmail("test@example.se").withRole(Role.ADMIN);
+		when(userRepository.findByEmail("test@example.se")).thenReturn(Optional.of(existingUser));
 
 		dataInitializer.run();
 
@@ -66,8 +74,18 @@ class DataInitializerTest {
 	}
 
 	@Test
+	void updateRoleToAdminWhenUserExistsWithWrongRole() {
+		var existingUser = UserEntity.create().withEmail("test@example.se").withRole(Role.USER);
+		when(userRepository.findByEmail("test@example.se")).thenReturn(Optional.of(existingUser));
+
+		dataInitializer.run();
+
+		verify(userRepository).save(argThat(user -> user.getRole() == Role.ADMIN));
+	}
+
+	@Test
 	void encryptPasswordBeforeSaving() {
-		when(userRepository.count()).thenReturn(0L);
+		when(userRepository.findByEmail("test@example.se")).thenReturn(Optional.empty());
 		when(passwordEncryption.encrypt("password")).thenReturn("encryptedPassword");
 
 		dataInitializer.run();
@@ -75,5 +93,4 @@ class DataInitializerTest {
 		verify(passwordEncryption).encrypt("password");
 		verify(userRepository).save(argThat(user -> user.getPassword().equals("encryptedPassword")));
 	}
-
 }
