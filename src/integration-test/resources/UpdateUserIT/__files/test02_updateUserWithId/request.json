@@ -1,5 +1,6 @@
 {
 	"phoneNumber": "0701234567",
 	"municipalityId": "2281",
-	"status": "INACTIVE"
+	"status": "INACTIVE",
+	"role": "USER"
 }

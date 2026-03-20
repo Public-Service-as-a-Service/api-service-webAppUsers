@@ -6,7 +6,10 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
+import org.jspecify.annotations.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -24,11 +27,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request,
-		HttpServletResponse response,
-		FilterChain filterChain) throws ServletException, IOException {
+		@NonNull HttpServletResponse response,
+		@NonNull FilterChain filterChain) throws ServletException, IOException {
 
 		String token = null;
 		String email = null;
+
 		if (request.getHeader("Authorization") != null) {
 			token = request.getHeader("Authorization").substring(7);
 			email = jwtUtil.extractUsername(token);
@@ -37,23 +41,28 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				if (cookie.getName().equals("token")) {
 					token = cookie.getValue();
 					email = jwtUtil.extractUsername(token);
-
 					break;
 				}
 			}
 		}
-		if (token != null && jwtUtil.validateToken(token, email)) {
-			UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, null, null);
-			authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
+		if (token != null && jwtUtil.validateToken(token, email)) {
+			String role = jwtUtil.extractRole(token);
+			var authorities = role != null
+				? List.of(new SimpleGrantedAuthority("ROLE_" + role))
+				: List.<SimpleGrantedAuthority>of();
+
+			UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, null, authorities);
+			authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 			SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 		}
+
 		filterChain.doFilter(request, response);
 	}
 
 	@Override
 	protected boolean shouldNotFilter(HttpServletRequest request) {
 		String path = request.getServletPath();
-		return path.equals("/api/auth/login") || path.equals("/api/auth/logout");
+		return path.equals("/api/users/auth/login") || path.equals("/api/users/auth/logout");
 	}
 }

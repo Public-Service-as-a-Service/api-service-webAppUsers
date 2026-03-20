@@ -6,6 +6,7 @@ import java.util.Objects;
 import se.sundsvall.dept44.common.validators.annotation.ValidMobileNumber;
 import se.sundsvall.dept44.common.validators.annotation.ValidMunicipalityId;
 import se.sundsvall.users.api.validation.ValidEnum;
+import se.sundsvall.users.integration.db.model.Enum.Role;
 import se.sundsvall.users.integration.db.model.Enum.Status;
 
 public class UpdateUserRequest {
@@ -23,6 +24,10 @@ public class UpdateUserRequest {
 	@Schema(description = "Status", example = "ACTIVE")
 	@ValidEnum(message = "must be ACTIVE, INACTIVE or SUSPENDED", enumClass = Status.class, ignoreCase = true)
 	private String status;
+
+	@Schema(description = "Roll", example = "USER")
+	@ValidEnum(message = "must be USER or ADMIN", enumClass = Role.class, ignoreCase = true)
+	private String role;
 
 	public static UpdateUserRequest create() {
 		return new UpdateUserRequest();
@@ -64,6 +69,19 @@ public class UpdateUserRequest {
 
 	public UpdateUserRequest withStatus(String status) {
 		this.status = status;
+		return this;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	public UpdateUserRequest withRole(String role) {
+		this.role = role;
 		return this;
 	}
 

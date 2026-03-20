@@ -1,6 +1,7 @@
 package se.sundsvall.users.integration.db.model;
 
 import jakarta.persistence.*;
+import se.sundsvall.users.integration.db.model.Enum.Role;
 import se.sundsvall.users.integration.db.model.Enum.Status;
 
 @Entity
@@ -30,6 +31,10 @@ public class UserEntity {
 
 	@Column(nullable = false, name = "password")
 	private String password;
+
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private Role role = Role.USER;
 
 	public static UserEntity create() {
 		return new UserEntity();
@@ -110,6 +115,19 @@ public class UserEntity {
 
 	public UserEntity withPassword(String password) {
 		this.password = password;
+		return this;
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+	public UserEntity withRole(Role role) {
+		this.role = role;
 		return this;
 	}
 }

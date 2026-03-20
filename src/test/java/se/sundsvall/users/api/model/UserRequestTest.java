@@ -24,17 +24,14 @@ class UserRequestTest {
 		final var phoneNumber = "phoneNumber";
 		final var municipalityId = "municipalityId";
 		final var status = "ACTIVE";
-		final var personalNumber = "personalNumber";
 
 		final var userRequest = UserRequest.create()
 			.withEmail(email)
-			.withPersonalNumber(personalNumber)
 			.withPhoneNumber(phoneNumber)
 			.withMunicipalityId(municipalityId)
 			.withStatus(status);
 
 		assertThat(userRequest.getEmail()).isEqualTo(email);
-		assertThat(userRequest.getPersonalNumber()).isEqualTo(personalNumber);
 		assertThat(userRequest.getPhoneNumber()).isEqualTo(phoneNumber);
 		assertThat(userRequest.getMunicipalityId()).isEqualTo(municipalityId);
 		assertThat(userRequest.getStatus()).isEqualTo(status);

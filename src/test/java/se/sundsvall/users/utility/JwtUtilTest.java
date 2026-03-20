@@ -36,7 +36,7 @@ public class JwtUtilTest {
 	void generateToken() {
 		final var email = "test@email";
 
-		var token = jwtUtil.generateToken(email);
+		var token = jwtUtil.generateToken(email, "USER");
 
 		assertThat(token).isNotNull();
 		assertThat(token).isNotEmpty();
@@ -47,7 +47,7 @@ public class JwtUtilTest {
 	@Test
 	void extractUsername() {
 		final var email = "test@email";
-		final var token = jwtUtil.generateToken(email);
+		final var token = jwtUtil.generateToken(email, "USER");
 
 		final var extractedEmail = jwtUtil.extractUsername(token);
 		assertThat(extractedEmail).isEqualTo(email);
@@ -57,7 +57,7 @@ public class JwtUtilTest {
 	@Test
 	void extractExpiration() {
 		final var email = "test@email";
-		final var token = jwtUtil.generateToken(email);
+		final var token = jwtUtil.generateToken(email, "USER");
 
 		final var expiration = jwtUtil.extractExpiration(token);
 
@@ -67,7 +67,7 @@ public class JwtUtilTest {
 	@Test
 	void validateToken_success() {
 		final var email = "test@email.se";
-		final var token = jwtUtil.generateToken(email);
+		final var token = jwtUtil.generateToken(email, "USER");
 
 		final var isValid = jwtUtil.validateToken(token, email);
 		assertThat(isValid).isTrue();
@@ -77,7 +77,7 @@ public class JwtUtilTest {
 	void validateToken_fail() {
 		final var email = "test@email.se";
 		final var differentEmail = "different email";
-		final var token = jwtUtil.generateToken(email);
+		final var token = jwtUtil.generateToken(email, "USER");
 		final var isValid = jwtUtil.validateToken(token, differentEmail);
 		assertThat(isValid).isFalse();
 	}
@@ -85,7 +85,7 @@ public class JwtUtilTest {
 	@Test
 	void extractClaim() {
 		final var email = "test@email.se";
-		final var token = jwtUtil.generateToken(email);
+		final var token = jwtUtil.generateToken(email, "USER");
 
 		final var subject = jwtUtil.extractClaim(token, claims -> claims.get("email", String.class));
 		assertThat(subject).isEqualTo(email);

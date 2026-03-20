@@ -26,7 +26,7 @@ import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON;
 
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
-@ActiveProfiles("junit")
+@ActiveProfiles("it")
 class UserResourceFailuresTest {
 
 	@Autowired

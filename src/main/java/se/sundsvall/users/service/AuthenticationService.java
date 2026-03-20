@@ -5,10 +5,12 @@ import se.sundsvall.dept44.problem.*;
 import se.sundsvall.users.api.model.JwtResponse;
 import se.sundsvall.users.api.model.LoginRequest;
 import se.sundsvall.users.integration.db.UserRepository;
+import se.sundsvall.users.integration.db.model.Enum.Status;
 import se.sundsvall.users.integration.db.model.UserEntity;
 import se.sundsvall.users.utility.JwtUtil;
 import se.sundsvall.users.utility.PasswordEncryption;
 
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Service
@@ -32,7 +34,14 @@ public class AuthenticationService {
 			throw Problem.valueOf(UNAUTHORIZED, "Invalid credentials");
 		}
 
-		String token = jwtService.generateToken(user.getEmail());
+		if (Status.SUSPENDED == user.getStatus()) {
+			throw Problem.valueOf(FORBIDDEN, "Account suspended");
+		}
+		if (Status.INACTIVE == user.getStatus()) {
+			throw Problem.valueOf(FORBIDDEN, "Account inactive");
+		}
+
+		String token = jwtService.generateToken(user.getEmail(), user.getRole().name());
 		return new JwtResponse(token);
 	}
 

@@ -1,12 +1,15 @@
 package se.sundsvall.users.service;
 
 import jakarta.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import se.sundsvall.dept44.problem.*;
 import se.sundsvall.users.api.model.UpdateUserRequest;
 import se.sundsvall.users.api.model.UserRequest;
 import se.sundsvall.users.api.model.UserResponse;
 import se.sundsvall.users.integration.db.UserRepository;
+import se.sundsvall.users.integration.db.model.Enum.Role;
 import se.sundsvall.users.integration.db.model.Enum.Status;
 import se.sundsvall.users.service.Mapper.UserMapper;
 import se.sundsvall.users.utility.PasswordEncryption;
@@ -61,13 +64,18 @@ public class UserService {
 		var userEntity = userRepository.findByEmail(email)
 			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, format(USER_NOT_FOUND, email)));
 
-		userRepository.save(userEntity
+		var updated = userEntity
 			.withEmail(email)
 			.withPhoneNumber(userRequest.getPhoneNumber())
 			.withMunicipalityId(userRequest.getMunicipalityId())
-			.withStatus(Status.valueOf(userRequest.getStatus().toUpperCase())));
+			.withStatus(Status.valueOf(userRequest.getStatus().toUpperCase()));
 
-		return userMapper.toUserResponse(userEntity);
+		if (userRequest.getRole() != null) {
+			updated = updated.withRole(Role.valueOf(userRequest.getRole().toUpperCase()));
+		}
+
+		userRepository.save(updated);
+		return userMapper.toUserResponse(updated);
 	}
 
 	public void updateUserPassword(String email, String password) {
@@ -99,5 +107,14 @@ public class UserService {
 
 	public void deleteUserById(Long id) {
 		userRepository.deleteById(id);
+	}
+
+	public List<UserResponse> getAllUsers() {
+		var users = userRepository.findAll();
+		var userResponse = new ArrayList<UserResponse>();
+		for (var user : users) {
+			userResponse.add(userMapper.toUserResponse(user));
+		}
+		return userResponse;
 	}
 }

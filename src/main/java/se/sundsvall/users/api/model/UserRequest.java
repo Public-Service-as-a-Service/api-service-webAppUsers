@@ -3,11 +3,11 @@ package se.sundsvall.users.api.model;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import java.util.Objects;
 import se.sundsvall.dept44.common.validators.annotation.ValidMobileNumber;
 import se.sundsvall.dept44.common.validators.annotation.ValidMunicipalityId;
 import se.sundsvall.users.api.validation.ValidEnum;
+import se.sundsvall.users.integration.db.model.Enum.Role;
 import se.sundsvall.users.integration.db.model.Enum.Status;
 
 public class UserRequest {
@@ -16,10 +16,6 @@ public class UserRequest {
 	@Email(message = "must be a valid Email-adress", regexp = "^[A-Za-zÅÄÖåäö0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")
 	@NotBlank(message = "cannot be blank")
 	private String email;
-
-	@Schema(description = "Personal number", example = "198602300337")
-	@Pattern(regexp = "^((19|20)[0-9]{10})?$")
-	private String personalNumber;
 
 	@Schema(description = "Telefonnummer", example = "0701740669")
 	@NotBlank(message = "cannot be blank")
@@ -38,6 +34,10 @@ public class UserRequest {
 	@Schema(description = "Lösenord", example = "mittLösenord")
 	@NotBlank
 	private String password;
+
+	@Schema(description = "Roll", example = "USER")
+	@ValidEnum(message = "must be USER or ADMIN", enumClass = Role.class, ignoreCase = true)
+	private String role = "USER";
 
 	public static UserRequest create() {
 		return new UserRequest();
@@ -82,19 +82,6 @@ public class UserRequest {
 		return this;
 	}
 
-	public String getPersonalNumber() {
-		return personalNumber;
-	}
-
-	public void setPersonalNumber(String personalNumber) {
-		this.personalNumber = personalNumber;
-	}
-
-	public UserRequest withPersonalNumber(String personalNumber) {
-		this.personalNumber = personalNumber;
-		return this;
-	}
-
 	public String getStatus() {
 		return status;
 	}
@@ -118,6 +105,19 @@ public class UserRequest {
 
 	public UserRequest withPassword(String password) {
 		this.password = password;
+		return this;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	public UserRequest withRole(String role) {
+		this.role = role;
 		return this;
 	}
 
