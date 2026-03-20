@@ -4,8 +4,9 @@ import java.util.Optional;
 import org.springframework.stereotype.Component;
 import se.sundsvall.users.api.model.UserRequest;
 import se.sundsvall.users.api.model.UserResponse;
-import se.sundsvall.users.integration.db.model.Enum.Status;
 import se.sundsvall.users.integration.db.model.UserEntity;
+import se.sundsvall.users.integration.db.model.enums.Role;
+import se.sundsvall.users.integration.db.model.enums.Status;
 
 @Component
 public class UserMapper {
@@ -17,7 +18,8 @@ public class UserMapper {
 				.withId(entity.getId())
 				.withPhoneNumber(entity.getPhoneNumber())
 				.withMunicipalityId(entity.getMunicipalityId())
-				.withStatus(String.valueOf(entity.getStatus())))
+				.withStatus(String.valueOf(entity.getStatus()))
+				.withRole(entity.getRole() != null ? entity.getRole().name() : null))
 			.orElse(null);
 	}
 
@@ -28,8 +30,10 @@ public class UserMapper {
 				.withPhoneNumber(request.getPhoneNumber())
 				.withMunicipalityId(request.getMunicipalityId())
 				.withPassword(encryptedPassword)
-				.withStatus(Status.valueOf(request.getStatus().toUpperCase())))
-
+				.withStatus(Status.valueOf(request.getStatus().toUpperCase()))
+				.withRole(request.getRole() != null
+					? Role.valueOf(request.getRole().toUpperCase())
+					: Role.USER))
 			.orElse(null);
 	}
 }

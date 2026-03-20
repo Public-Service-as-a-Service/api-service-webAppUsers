@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -22,7 +23,8 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
-@ActiveProfiles("junit")
+@ActiveProfiles("it")
+@WithMockUser(roles = "ADMIN")
 
 class UserResourceTest {
 
@@ -58,7 +60,8 @@ class UserResourceTest {
 			.withEmail("test@testmail.com")
 			.withMunicipalityId("2281")
 			.withPhoneNumber("0701740649")
-			.withStatus("ACTIVE");
+			.withStatus("ACTIVE")
+			.withRole("user");
 
 		when(userServiceMock.createUser(any(UserRequest.class))).thenReturn(userResponse);
 		var response = webTestClient.post()
@@ -84,7 +87,8 @@ class UserResourceTest {
 			.withEmail(email)
 			.withMunicipalityId("2281")
 			.withPhoneNumber("0701740629")
-			.withStatus("ACTIVE");
+			.withStatus("ACTIVE")
+			.withRole("user");
 
 		when(userServiceMock.getUserByEmail(email)).thenReturn(userResponse);
 
@@ -107,7 +111,8 @@ class UserResourceTest {
 			.withId(id)
 			.withMunicipalityId("2281")
 			.withPhoneNumber("0701740629")
-			.withStatus("ACTIVE");
+			.withStatus("ACTIVE")
+			.withRole("user");
 
 		when(userServiceMock.getUserById(id)).thenReturn(userResponse);
 
@@ -144,12 +149,14 @@ class UserResourceTest {
 		final var userRequest = UpdateUserRequest.create()
 			.withMunicipalityId("2281")
 			.withPhoneNumber("0701740669")
-			.withStatus("ACTIVE");
+			.withStatus("ACTIVE")
+			.withRole("user");
 		final var userResponse = UserResponse.create()
 			.withEmail(email)
 			.withMunicipalityId("2281")
 			.withPhoneNumber("0701740669")
-			.withStatus("ACTIVE");
+			.withStatus("ACTIVE")
+			.withRole("user");
 
 		when(userServiceMock.updateUserByEmail(any(UpdateUserRequest.class), eq(email))).thenReturn(userResponse);
 
@@ -173,12 +180,14 @@ class UserResourceTest {
 		final var userRequest = UpdateUserRequest.create()
 			.withMunicipalityId("2281")
 			.withPhoneNumber("0701740669")
-			.withStatus("ACTIVE");
+			.withStatus("ACTIVE")
+			.withRole("user");
 		final var userResponse = UserResponse.create()
 			.withEmail("test@test.com")
 			.withMunicipalityId("2281")
 			.withPhoneNumber("0701740619")
-			.withStatus("ACTIVE");
+			.withStatus("ACTIVE")
+			.withRole("user");
 
 		when(userServiceMock.updateUserById(any(UpdateUserRequest.class), eq(id))).thenReturn(userResponse);
 

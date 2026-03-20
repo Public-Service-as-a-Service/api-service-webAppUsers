@@ -20,8 +20,9 @@ public class JwtUtil {
 	@Value("${jwt.expiration}")
 	private Long expiration;
 
-	public String generateToken(String email) {
+	public String generateToken(String email, String role) {
 		Map<String, Object> claims = new HashMap<>();
+		claims.put("role", role);
 		return createToken(claims, email);
 	}
 
@@ -51,6 +52,10 @@ public class JwtUtil {
 	public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
 		final Claims claims = extractAllClaims(token);
 		return claimsResolver.apply(claims);
+	}
+
+	public String extractRole(String token) {
+		return extractClaim(token, claims -> claims.get("role", String.class));
 	}
 
 	private Claims extractAllClaims(String token) {

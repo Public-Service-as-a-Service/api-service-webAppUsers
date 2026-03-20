@@ -5,8 +5,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import se.sundsvall.users.integration.db.UserRepository;
-import se.sundsvall.users.integration.db.model.Enum.Status;
 import se.sundsvall.users.integration.db.model.UserEntity;
+import se.sundsvall.users.integration.db.model.enums.Role;
+import se.sundsvall.users.integration.db.model.enums.Status;
 import se.sundsvall.users.service.UserService;
 import se.sundsvall.users.utility.PasswordEncryption;
 
@@ -30,14 +31,18 @@ public class DataInitializer implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) {
-		if (userRepository.count() == 0) {
-			UserEntity userEntity = UserEntity.create()
+		var existing = userRepository.findByEmail(email);
+		if (existing.isEmpty()) {
+			userRepository.save(UserEntity.create()
 				.withEmail(email)
 				.withMunicipalityId("2281")
 				.withPhoneNumber("0701234567")
 				.withStatus(Status.ACTIVE)
-				.withPassword(passwordEncryption.encrypt(password));
-			userRepository.save(userEntity);
+				.withRole(Role.ADMIN)
+				.withPassword(passwordEncryption.encrypt(password)));
+		} else if (existing.get().getRole() != Role.ADMIN) {
+			existing.get().setRole(Role.ADMIN);
+			userRepository.save(existing.get());
 		}
 	}
 }

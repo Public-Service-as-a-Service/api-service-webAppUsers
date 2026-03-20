@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -110,6 +111,13 @@ public class UserResource {
 	public ResponseEntity<Void> updateUserPassword(@PathVariable String email, @RequestBody String password) {
 		userService.updateUserPassword(email, password);
 		return ResponseEntity.noContent().build();
+	}
+
+	@Operation(summary = "Get all users")
+	@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true)
+	@GetMapping("users")
+	public ResponseEntity<List<UserResponse>> getAllUsers() {
+		return ResponseEntity.ok(userService.getAllUsers());
 	}
 
 }

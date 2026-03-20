@@ -29,6 +29,12 @@
 			<optional>true</optional>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
 		<!-- Dept44 Framework-->
 		<dependency>
 			<groupId>se.sundsvall.dept44</groupId>

@@ -1,5 +1,6 @@
 package se.sundsvall.users.service;
 
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,8 +12,8 @@ import se.sundsvall.users.api.model.UpdateUserRequest;
 import se.sundsvall.users.api.model.UserRequest;
 import se.sundsvall.users.api.model.UserResponse;
 import se.sundsvall.users.integration.db.UserRepository;
-import se.sundsvall.users.integration.db.model.Enum.Status;
 import se.sundsvall.users.integration.db.model.UserEntity;
+import se.sundsvall.users.integration.db.model.enums.Status;
 import se.sundsvall.users.service.Mapper.UserMapper;
 import se.sundsvall.users.utility.PasswordEncryption;
 
@@ -284,6 +285,27 @@ class UserServiceTest {
 		// Assert
 		assertThat(problem).hasMessage("Not Found: user " + email + " was not found");
 		assertThat(problem).isNotNull();
+	}
+
+	@Test
+	void getAllUsers() {
+		final var userEntity1 = UserEntity.create().withId(1L).withEmail("user1@test.se");
+		final var userEntity2 = UserEntity.create().withId(2L).withEmail("user2@test.se");
+		final var userResponse1 = UserResponse.create().withId(1L).withEmail("user1@test.se");
+		final var userResponse2 = UserResponse.create().withId(2L).withEmail("user2@test.se");
+
+		when(userRepositoryMock.findAll()).thenReturn(List.of(userEntity1, userEntity2));
+		when(userMapperMock.toUserResponse(userEntity1)).thenReturn(userResponse1);
+		when(userMapperMock.toUserResponse(userEntity2)).thenReturn(userResponse2);
+
+		final var result = userService.getAllUsers();
+
+		assertThat(result)
+			.hasSize(2)
+			.containsExactly(userResponse1, userResponse2);
+		verify(userRepositoryMock).findAll();
+		verify(userMapperMock).toUserResponse(userEntity1);
+		verify(userMapperMock).toUserResponse(userEntity2);
 	}
 
 }

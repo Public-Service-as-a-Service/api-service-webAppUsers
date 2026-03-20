@@ -15,6 +15,8 @@ public class UserResponse {
 	private String municipalityId;
 	@Schema(description = "Status", example = "ACTIVE")
 	private String status;
+	@Schema(description = "Roll", example = "USER")
+	private String role;
 
 	public static UserResponse create() {
 		return new UserResponse();
@@ -82,6 +84,19 @@ public class UserResponse {
 
 	public UserResponse withStatus(String status) {
 		this.status = status;
+		return this;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	public UserResponse withRole(String role) {
+		this.role = role;
 		return this;
 	}
 
