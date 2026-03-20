@@ -1,8 +1,8 @@
 package se.sundsvall.users.integration.db.model;
 
 import jakarta.persistence.*;
-import se.sundsvall.users.integration.db.model.Enum.Role;
-import se.sundsvall.users.integration.db.model.Enum.Status;
+import se.sundsvall.users.integration.db.model.enums.Role;
+import se.sundsvall.users.integration.db.model.enums.Status;
 
 @Entity
 @Table(name = "users",

@@ -7,8 +7,8 @@ import java.util.Objects;
 import se.sundsvall.dept44.common.validators.annotation.ValidMobileNumber;
 import se.sundsvall.dept44.common.validators.annotation.ValidMunicipalityId;
 import se.sundsvall.users.api.validation.ValidEnum;
-import se.sundsvall.users.integration.db.model.Enum.Role;
-import se.sundsvall.users.integration.db.model.Enum.Status;
+import se.sundsvall.users.integration.db.model.enums.Role;
+import se.sundsvall.users.integration.db.model.enums.Status;
 
 public class UserRequest {
 

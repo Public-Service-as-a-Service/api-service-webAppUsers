@@ -5,9 +5,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import se.sundsvall.users.integration.db.UserRepository;
-import se.sundsvall.users.integration.db.model.Enum.Role;
-import se.sundsvall.users.integration.db.model.Enum.Status;
 import se.sundsvall.users.integration.db.model.UserEntity;
+import se.sundsvall.users.integration.db.model.enums.Role;
+import se.sundsvall.users.integration.db.model.enums.Status;
 import se.sundsvall.users.service.UserService;
 import se.sundsvall.users.utility.PasswordEncryption;
 

@@ -10,9 +10,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 import se.sundsvall.users.integration.db.UserRepository;
-import se.sundsvall.users.integration.db.model.Enum.Role;
-import se.sundsvall.users.integration.db.model.Enum.Status;
 import se.sundsvall.users.integration.db.model.UserEntity;
+import se.sundsvall.users.integration.db.model.enums.Role;
+import se.sundsvall.users.integration.db.model.enums.Status;
 import se.sundsvall.users.service.UserService;
 import se.sundsvall.users.utility.PasswordEncryption;
 

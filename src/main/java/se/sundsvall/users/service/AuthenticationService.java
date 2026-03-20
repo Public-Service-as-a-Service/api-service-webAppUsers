@@ -5,8 +5,8 @@ import se.sundsvall.dept44.problem.*;
 import se.sundsvall.users.api.model.JwtResponse;
 import se.sundsvall.users.api.model.LoginRequest;
 import se.sundsvall.users.integration.db.UserRepository;
-import se.sundsvall.users.integration.db.model.Enum.Status;
 import se.sundsvall.users.integration.db.model.UserEntity;
+import se.sundsvall.users.integration.db.model.enums.Status;
 import se.sundsvall.users.utility.JwtUtil;
 import se.sundsvall.users.utility.PasswordEncryption;
 

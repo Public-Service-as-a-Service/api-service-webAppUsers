@@ -10,7 +10,7 @@ import se.sundsvall.dept44.test.AbstractAppTest;
 import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
 import se.sundsvall.users.Application;
 import se.sundsvall.users.integration.db.UserRepository;
-import se.sundsvall.users.integration.db.model.Enum.Status;
+import se.sundsvall.users.integration.db.model.enums.Status;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

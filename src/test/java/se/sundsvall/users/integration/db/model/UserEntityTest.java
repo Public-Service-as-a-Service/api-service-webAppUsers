@@ -1,8 +1,8 @@
 package se.sundsvall.users.integration.db.model;
 
 import org.junit.jupiter.api.Test;
-import se.sundsvall.users.integration.db.model.Enum.Role;
-import se.sundsvall.users.integration.db.model.Enum.Status;
+import se.sundsvall.users.integration.db.model.enums.Role;
+import se.sundsvall.users.integration.db.model.enums.Status;
 
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidGettersAndSetters;

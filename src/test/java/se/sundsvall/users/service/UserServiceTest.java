@@ -12,8 +12,8 @@ import se.sundsvall.users.api.model.UpdateUserRequest;
 import se.sundsvall.users.api.model.UserRequest;
 import se.sundsvall.users.api.model.UserResponse;
 import se.sundsvall.users.integration.db.UserRepository;
-import se.sundsvall.users.integration.db.model.Enum.Status;
 import se.sundsvall.users.integration.db.model.UserEntity;
+import se.sundsvall.users.integration.db.model.enums.Status;
 import se.sundsvall.users.service.Mapper.UserMapper;
 import se.sundsvall.users.utility.PasswordEncryption;
 
@@ -300,8 +300,9 @@ class UserServiceTest {
 
 		final var result = userService.getAllUsers();
 
-		assertThat(result).hasSize(2);
-		assertThat(result).containsExactly(userResponse1, userResponse2);
+		assertThat(result)
+			.hasSize(2)
+			.containsExactly(userResponse1, userResponse2);
 		verify(userRepositoryMock).findAll();
 		verify(userMapperMock).toUserResponse(userEntity1);
 		verify(userMapperMock).toUserResponse(userEntity2);
