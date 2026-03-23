@@ -284,8 +284,9 @@ class UserServiceTest {
 		final var problem = assertThrows(Throwable.class, () -> userService.updateUserById(request, id));
 
 		// Assert
-		assertThat(problem).hasMessage("Not Found: user " + id + " was not found");
-		assertThat(problem).isNotNull();
+		assertThat(problem)
+			.isNotNull()
+			.hasMessage("Not Found: user " + id + " was not found");
 	}
 
 	@Test
