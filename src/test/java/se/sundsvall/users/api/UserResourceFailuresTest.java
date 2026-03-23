@@ -13,6 +13,7 @@ import se.sundsvall.dept44.problem.*;
 import se.sundsvall.dept44.problem.violations.ConstraintViolationProblem;
 import se.sundsvall.dept44.problem.violations.Violation;
 import se.sundsvall.users.Application;
+import se.sundsvall.users.api.model.UpdateUserRequest;
 import se.sundsvall.users.api.model.UserRequest;
 import se.sundsvall.users.utility.JwtUtil;
 
@@ -107,15 +108,15 @@ class UserResourceFailuresTest {
 	@Test
 	void updateUserWithBadRequest() {
 		// Arrange
-		final String email = "test@testmail.com";
-		final var userRequest = UserRequest.create()
-			.withEmail(email)
+		final var id = 1L;
+		final var userRequest = UpdateUserRequest.create()
+			.withEmail("test@testmail.com")
 			.withPhoneNumber("numberplate")
 			.withMunicipalityId("municipalityId")
 			.withStatus("status");
 
 		// act
-		final var response = webTestClient.patch().uri("/api/users/emails/{email}", email)
+		final var response = webTestClient.patch().uri("/api/users/ids/{id}", id)
 			.bodyValue(userRequest)
 			.exchange()
 			.expectStatus().isBadRequest()
@@ -133,6 +134,7 @@ class UserResourceFailuresTest {
 			.containsExactlyInAnyOrder(
 				tuple("status", "must be ACTIVE, INACTIVE or SUSPENDED"),
 				tuple("phoneNumber", "must be a valid mobile number"),
-				tuple("municipalityId", "must be a valid Municipality-ID"));
+				tuple("municipalityId", "must be a valid Municipality-ID"),
+				tuple("role", "must be USER or ADMIN"));
 	}
 }

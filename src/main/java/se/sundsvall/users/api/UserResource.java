@@ -65,17 +65,6 @@ public class UserResource {
 		return user != null ? ok(user) : ResponseEntity.noContent().build();
 	}
 
-	@PatchMapping("users/emails/{email}")
-	@Operation(summary = "Update information of a user with Email")
-	@ApiResponse(responseCode = "201", description = "Successful operation", useReturnTypeSchema = true)
-	@Validated
-	public ResponseEntity<UserResponse> updateUserByEmail(
-		@Parameter(description = "Email-address") @Valid @Email @PathVariable String email, @RequestBody @Valid UpdateUserRequest userRequest) {
-		var user = userService.updateUserByEmail(userRequest, email);
-		return ResponseEntity.created(UriComponentsBuilder.fromPath(PATH).buildAndExpand(userRequest).toUri())
-			.body(user);
-	}
-
 	@PatchMapping("users/ids/{id}")
 	@Operation(summary = "Update information of a user with Id")
 	@ApiResponse(responseCode = "201", description = "Successful operation", useReturnTypeSchema = true)
@@ -105,11 +94,11 @@ public class UserResource {
 		return ResponseEntity.noContent().build();
 	}
 
-	@PatchMapping("users/emails/{email}/password")
-	@Operation(summary = "Update a users password with email")
+	@PatchMapping("users/ids/{id}/password")
+	@Operation(summary = "Update a users password with id")
 	@ApiResponse(responseCode = "204", description = "Successful operation", useReturnTypeSchema = true)
-	public ResponseEntity<Void> updateUserPassword(@PathVariable String email, @RequestBody String password) {
-		userService.updateUserPassword(email, password);
+	public ResponseEntity<Void> updateUserPasswordById(@PathVariable Long id, @RequestBody String password) {
+		userService.updateUserPasswordById(id, password);
 		return ResponseEntity.noContent().build();
 	}
 

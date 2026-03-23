@@ -1,8 +1,8 @@
 package se.sundsvall.users.service;
 
 import jakarta.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import se.sundsvall.dept44.problem.*;
 import se.sundsvall.users.api.model.UpdateUserRequest;
@@ -59,13 +59,21 @@ public class UserService {
 	}
 
 	// UPDATE
-	public UserResponse updateUserByEmail(UpdateUserRequest userRequest, String email) {
+	public void updateUserPasswordById(Long id, String password) {
+		var userEntity = userRepository.findById(id)
+			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, format(USER_NOT_FOUND, id)));
+		userEntity.setPassword(passwordEncryption.encrypt(password));
+		userRepository.save(userEntity);
+	}
 
-		var userEntity = userRepository.findByEmail(email)
-			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, format(USER_NOT_FOUND, email)));
+	public UserResponse updateUserById(UpdateUserRequest userRequest, Long id) {
+
+		var userEntity = userRepository.findById(id)
+			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, format(USER_NOT_FOUND, id)));
 
 		var updated = userEntity
-			.withEmail(email)
+			.withId(id)
+			.withEmail(userRequest.getEmail())
 			.withPhoneNumber(userRequest.getPhoneNumber())
 			.withMunicipalityId(userRequest.getMunicipalityId())
 			.withStatus(Status.valueOf(userRequest.getStatus().toUpperCase()));
@@ -75,27 +83,6 @@ public class UserService {
 		}
 
 		userRepository.save(updated);
-		return userMapper.toUserResponse(updated);
-	}
-
-	public void updateUserPassword(String email, String password) {
-		var userEntity = userRepository.findByEmail(email)
-			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, format(USER_NOT_FOUND, email)));
-		final String encryptedPassword = passwordEncryption.encrypt(password);
-		userEntity.setPassword(encryptedPassword);
-		userRepository.save(userEntity);
-	}
-
-	public UserResponse updateUserById(UpdateUserRequest userRequest, Long id) {
-
-		var userEntity = userRepository.findById(id)
-			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, format(USER_NOT_FOUND, id)));
-
-		userRepository.save(userEntity
-			.withId(id)
-			.withPhoneNumber(userRequest.getPhoneNumber())
-			.withMunicipalityId(userRequest.getMunicipalityId())
-			.withStatus(Status.valueOf(userRequest.getStatus().toUpperCase())));
 
 		return userMapper.toUserResponse(userEntity);
 	}
@@ -110,11 +97,8 @@ public class UserService {
 	}
 
 	public List<UserResponse> getAllUsers() {
-		var users = userRepository.findAll();
-		var userResponse = new ArrayList<UserResponse>();
-		for (var user : users) {
-			userResponse.add(userMapper.toUserResponse(user));
-		}
-		return userResponse;
+		return userRepository.findAll().stream()
+			.map(userMapper::toUserResponse)
+			.collect(Collectors.toList());
 	}
 }

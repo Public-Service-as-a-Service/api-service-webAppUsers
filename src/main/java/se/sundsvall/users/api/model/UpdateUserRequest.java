@@ -1,6 +1,7 @@
 package se.sundsvall.users.api.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import java.util.Objects;
 import se.sundsvall.dept44.common.validators.annotation.ValidMobileNumber;
@@ -10,6 +11,11 @@ import se.sundsvall.users.integration.db.model.enums.Role;
 import se.sundsvall.users.integration.db.model.enums.Status;
 
 public class UpdateUserRequest {
+
+	@Schema(description = "E-postadress", example = "")
+	@NotBlank(message = "cannot be blank")
+	@Email
+	private String email;
 
 	@Schema(description = "Telefonnummer", example = "0701740669")
 	@NotBlank(message = "cannot be blank")
@@ -31,6 +37,19 @@ public class UpdateUserRequest {
 
 	public static UpdateUserRequest create() {
 		return new UpdateUserRequest();
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public UpdateUserRequest withEmail(String email) {
+		this.email = email;
+		return this;
 	}
 
 	public String getPhoneNumber() {
@@ -87,7 +106,7 @@ public class UpdateUserRequest {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(municipalityId, phoneNumber, status);
+		return Objects.hash(email, municipalityId, phoneNumber, status, role);
 	}
 
 	@Override
@@ -99,7 +118,10 @@ public class UpdateUserRequest {
 			return false;
 		}
 		UpdateUserRequest that = (UpdateUserRequest) o;
-		return Objects.equals(phoneNumber, that.phoneNumber)
-			&& Objects.equals(status, that.status) && Objects.equals(municipalityId, that.municipalityId);
+		return Objects.equals(email, that.email)
+			&& Objects.equals(phoneNumber, that.phoneNumber)
+			&& Objects.equals(status, that.status)
+			&& Objects.equals(municipalityId, that.municipalityId)
+			&& Objects.equals(role, that.role);
 	}
 }
