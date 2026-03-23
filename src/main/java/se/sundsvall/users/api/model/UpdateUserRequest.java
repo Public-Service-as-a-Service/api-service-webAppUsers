@@ -106,7 +106,7 @@ public class UpdateUserRequest {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(municipalityId, phoneNumber, status);
+		return Objects.hash(email, municipalityId, phoneNumber, status, role);
 	}
 
 	@Override
@@ -118,7 +118,10 @@ public class UpdateUserRequest {
 			return false;
 		}
 		UpdateUserRequest that = (UpdateUserRequest) o;
-		return Objects.equals(phoneNumber, that.phoneNumber)
-			&& Objects.equals(status, that.status) && Objects.equals(municipalityId, that.municipalityId);
+		return Objects.equals(email, that.email)
+			&& Objects.equals(phoneNumber, that.phoneNumber)
+			&& Objects.equals(status, that.status)
+			&& Objects.equals(municipalityId, that.municipalityId)
+			&& Objects.equals(role, that.role);
 	}
 }
