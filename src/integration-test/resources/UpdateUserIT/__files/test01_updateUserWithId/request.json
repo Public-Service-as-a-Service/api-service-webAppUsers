@@ -1,6 +1,5 @@
 {
-	"id": 2,
-	"email": "testmail2@sundsvall.se",
+	"email": "testmail1@sundsvall.se",
 	"phoneNumber": "0701234567",
 	"municipalityId": "2281",
 	"status": "INACTIVE",

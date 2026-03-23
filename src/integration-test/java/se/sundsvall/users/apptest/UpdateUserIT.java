@@ -32,58 +32,33 @@ class UpdateUserIT extends AbstractAppTest {
     private UserRepository userRepository;
 
     @Test
-    void test01_UpdateUserWithEmail() {
+    void test01_UpdateUserWithId() {
+        final Long id = 1L;
 
-
-        final String email = "testmail1@sundsvall.se";
-
-        assertThat(userRepository.findByEmail(email)).isPresent();
+        assertThat(userRepository.findById(id)).isPresent();
 
         setupCall()
-                .withServicePath("/api/users/emails/".concat(email))
+                .withServicePath("/api/users/ids/" + id)
                 .withHttpMethod(HttpMethod.PATCH)
                 .withRequest(REQUEST)
                 .withExpectedResponseStatus(HttpStatus.CREATED)
                 .withExpectedResponse(RESPONSE)
                 .sendRequestAndVerifyResponse();
 
-        final var user = userRepository.findByEmail(email);
+        final var user = userRepository.findById(id);
 
         assertThat(user).isPresent();
-        assertThat(user.get().getEmail()).isEqualTo(email);
-        assertThat(user.get().getId()).isEqualTo(1L);
+        assertThat(user.get().getEmail()).isEqualTo("testmail1@sundsvall.se");
+        assertThat(user.get().getId()).isEqualTo(id);
         assertThat(user.get().getPhoneNumber()).isEqualTo("0701234567");
         assertThat(user.get().getMunicipalityId()).isEqualTo("2281");
         assertThat(user.get().getStatus()).isEqualTo(Status.INACTIVE);
     }
 
     @Test
-    void test02_UpdateUserWithId() {
-        final Long id = 2L;
-        assertThat(userRepository.findById(id)).isPresent();
+    void test02_UpdateUserWithIdNotFound() {
         setupCall()
-        .withServicePath("/api/users/ids/" + id)
-                .withHttpMethod(HttpMethod.PATCH)
-                .withRequest(REQUEST)
-                .withExpectedResponseStatus(HttpStatus.CREATED)
-                .withExpectedResponse(RESPONSE)
-                .sendRequestAndVerifyResponse();
-
-        final var userEntity = userRepository.findById(id);
-
-        assertThat(userEntity).isPresent();
-        assertThat(userEntity.get().getEmail()).isEqualTo("testmail2@sundsvall.se");
-        assertThat(userEntity.get().getId()).isEqualTo(id);
-        assertThat(userEntity.get().getPhoneNumber()).isEqualTo("0701234567");
-        assertThat(userEntity.get().getMunicipalityId()).isEqualTo("2281");
-        assertThat(userEntity.get().getStatus()).isEqualTo(Status.INACTIVE);
-    }
-
-    @Test
-    void test03_UpdateUserWithEmailNotFound() {
-
-        setupCall()
-        .withServicePath("/api/users/emails/".concat("testmail@sundsvall.se"))
+                .withServicePath("/api/users/ids/999")
                 .withHttpMethod(HttpMethod.PATCH)
                 .withRequest(REQUEST)
                 .withExpectedResponseStatus(HttpStatus.NOT_FOUND)

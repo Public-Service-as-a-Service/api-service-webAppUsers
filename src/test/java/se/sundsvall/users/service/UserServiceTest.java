@@ -121,32 +121,33 @@ class UserServiceTest {
 	}
 
 	@Test
-	void updateUserEmail() {
+	void updateUserById() {
 		// Arrange
+		final var id = 1L;
 		final var email = "Test@testmail.se";
 		final var phoneNumber = "0701740619";
 		final var municipalityId = "2281";
 		final var status = "ACTIVE";
 		final var userRequestMock = UpdateUserRequest.create()
+			.withEmail(email)
 			.withPhoneNumber(phoneNumber)
 			.withMunicipalityId(municipalityId)
 			.withStatus(status);
-		final var userEntity = UserEntity.create().withEmail(email)
+		final var userEntity = UserEntity.create().withId(id).withEmail(email)
 			.withPhoneNumber(phoneNumber)
 			.withMunicipalityId(municipalityId)
 			.withStatus(Status.valueOf(status));
-		final var userResponseMock = UserResponse.create().withEmail(email)
+		final var userResponseMock = UserResponse.create().withId(id).withEmail(email)
 			.withPhoneNumber(phoneNumber)
 			.withMunicipalityId(municipalityId)
 			.withStatus(status);
 		// Mock
-		when(userRepositoryMock.findByEmail(email)).thenReturn(Optional.of(userEntity));
-
+		when(userRepositoryMock.findById(id)).thenReturn(Optional.of(userEntity));
 		when(userRepositoryMock.save(userEntity)).thenReturn(userEntity);
 		when(userMapperMock.toUserResponse(userEntity)).thenReturn(userResponseMock);
 
 		// Act
-		final var updatedUser = userService.updateUserByEmail(userRequestMock, email);
+		final var updatedUser = userService.updateUserById(userRequestMock, id);
 
 		// Verify/Assert
 		verify(userRepositoryMock).save(same(userEntity));
@@ -275,15 +276,15 @@ class UserServiceTest {
 	@Test
 	void updateUserNotFound() {
 		// Arrange
-		final var email = "Test@testmail.se";
+		final var id = 99L;
 		final var request = UpdateUserRequest.create();
 
 		// Mock
-		when(userRepositoryMock.findByEmail(email)).thenReturn(Optional.empty());
-		final var problem = assertThrows(Throwable.class, () -> userService.updateUserByEmail(request, email));
+		when(userRepositoryMock.findById(id)).thenReturn(Optional.empty());
+		final var problem = assertThrows(Throwable.class, () -> userService.updateUserById(request, id));
 
 		// Assert
-		assertThat(problem).hasMessage("Not Found: user " + email + " was not found");
+		assertThat(problem).hasMessage("Not Found: user " + id + " was not found");
 		assertThat(problem).isNotNull();
 	}
 

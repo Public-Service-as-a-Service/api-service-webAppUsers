@@ -130,54 +130,24 @@ class UserResourceTest {
 
 	@Test
 	void updatePassword() {
-		final var email = "test@email.se";
+		final var id = 1L;
 		final var password = "password";
 
-		doNothing().when(userServiceMock).updateUserPassword(email, password);
-		final var response = webTestClient.patch()
-			.uri("/api/users/emails/{email}/password", email)
+		doNothing().when(userServiceMock).updateUserPasswordById(id, password);
+		webTestClient.patch()
+			.uri("/api/users/ids/{id}/password", id)
 			.bodyValue(password)
 			.exchange()
 			.expectStatus().isNoContent();
 
-		verify(userServiceMock).updateUserPassword(email, password);
-	}
-
-	@Test
-	void updateUserByEmail() {
-		final var email = "test@test.com";
-		final var userRequest = UpdateUserRequest.create()
-			.withMunicipalityId("2281")
-			.withPhoneNumber("0701740669")
-			.withStatus("ACTIVE")
-			.withRole("user");
-		final var userResponse = UserResponse.create()
-			.withEmail(email)
-			.withMunicipalityId("2281")
-			.withPhoneNumber("0701740669")
-			.withStatus("ACTIVE")
-			.withRole("user");
-
-		when(userServiceMock.updateUserByEmail(any(UpdateUserRequest.class), eq(email))).thenReturn(userResponse);
-
-		final var response = webTestClient.patch()
-			.uri("api/users/emails/{email}", email)
-			.bodyValue(userRequest)
-			.exchange()
-			.expectStatus().isCreated()
-			.expectBody(UserResponse.class)
-			.returnResult()
-			.getResponseBody();
-
-		assertThat(response).isEqualTo(userResponse);
-		verify(userServiceMock).updateUserByEmail(userRequest, email);
-
+		verify(userServiceMock).updateUserPasswordById(id, password);
 	}
 
 	@Test
 	void updateUserByPartyId() {
 		final var id = 1L;
 		final var userRequest = UpdateUserRequest.create()
+			.withEmail("test@test.com")
 			.withMunicipalityId("2281")
 			.withPhoneNumber("0701740669")
 			.withStatus("ACTIVE")
