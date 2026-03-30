@@ -22,18 +22,18 @@ class UserRequestTest {
 	void testBuildMethod() {
 		final var email = "email";
 		final var phoneNumber = "phoneNumber";
-		final var municipalityId = "municipalityId";
+		final var municipalityName = "municipalityName";
 		final var status = "ACTIVE";
 
 		final var userRequest = UserRequest.create()
 			.withEmail(email)
 			.withPhoneNumber(phoneNumber)
-			.withMunicipalityId(municipalityId)
+			.withMunicipalityName(municipalityName)
 			.withStatus(status);
 
 		assertThat(userRequest.getEmail()).isEqualTo(email);
 		assertThat(userRequest.getPhoneNumber()).isEqualTo(phoneNumber);
-		assertThat(userRequest.getMunicipalityId()).isEqualTo(municipalityId);
+		assertThat(userRequest.getMunicipalityName()).isEqualTo(municipalityName);
 		assertThat(userRequest.getStatus()).isEqualTo(status);
 	}
 

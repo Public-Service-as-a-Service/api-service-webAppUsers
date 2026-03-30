@@ -75,7 +75,7 @@ public class UserService {
 			.withId(id)
 			.withEmail(userRequest.getEmail())
 			.withPhoneNumber(userRequest.getPhoneNumber())
-			.withMunicipalityId(userRequest.getMunicipalityId())
+			.withMunicipalityId(userMapper.resolveMunicipalityId(userRequest.getMunicipalityName()))
 			.withStatus(Status.valueOf(userRequest.getStatus().toUpperCase()));
 
 		if (userRequest.getRole() != null) {
@@ -89,15 +89,25 @@ public class UserService {
 
 	// DELETE
 	public void deleteUserByEmail(String email) {
+		var userEntity = userRepository.findByEmail(email)
+			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, format(USER_NOT_FOUND, email)));
+		if (userEntity.getRole() == Role.ADMIN) {
+			throw Problem.valueOf(org.springframework.http.HttpStatus.FORBIDDEN, "admin users cannot be deleted");
+		}
 		userRepository.deleteByEmail(email);
 	}
 
 	public void deleteUserById(Long id) {
+		var userEntity = userRepository.findById(id)
+			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, format(USER_NOT_FOUND, id)));
+		if (userEntity.getRole() == Role.ADMIN) {
+			throw Problem.valueOf(org.springframework.http.HttpStatus.FORBIDDEN, "admin users cannot be deleted");
+		}
 		userRepository.deleteById(id);
 	}
 
 	public List<UserResponse> getAllUsers() {
-		return userRepository.findAll().stream()
+		return userRepository.findAllByRole(Role.USER).stream()
 			.map(userMapper::toUserResponse)
 			.collect(Collectors.toList());
 	}

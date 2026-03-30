@@ -11,8 +11,8 @@ public class UserResponse {
 	private String email;
 	@Schema(description = "Telefonnummer", example = "0701740669")
 	private String phoneNumber;
-	@Schema(description = "Kommun-id", example = "2281")
-	private String municipalityId;
+	@Schema(description = "Kommunnamn", example = "Sundsvall")
+	private String municipalityName;
 	@Schema(description = "Status", example = "ACTIVE")
 	private String status;
 	@Schema(description = "Roll", example = "USER")
@@ -22,16 +22,16 @@ public class UserResponse {
 		return new UserResponse();
 	}
 
-	public String getMunicipalityId() {
-		return municipalityId;
+	public String getMunicipalityName() {
+		return municipalityName;
 	}
 
-	public void setMunicipalityId(String municipalityId) {
-		this.municipalityId = municipalityId;
+	public void setMunicipalityName(String municipalityName) {
+		this.municipalityName = municipalityName;
 	}
 
-	public UserResponse withMunicipalityId(String municipalityId) {
-		this.municipalityId = municipalityId;
+	public UserResponse withMunicipalityName(String municipalityName) {
+		this.municipalityName = municipalityName;
 		return this;
 	}
 
@@ -102,7 +102,7 @@ public class UserResponse {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(municipalityId, email, phoneNumber, status);
+		return Objects.hash(municipalityName, email, phoneNumber, status);
 	}
 
 	@Override
@@ -115,7 +115,7 @@ public class UserResponse {
 		}
 		UserResponse that = (UserResponse) o;
 		return Objects.equals(email, that.email) && Objects.equals(phoneNumber, that.phoneNumber)
-			&& Objects.equals(status, that.status) && Objects.equals(municipalityId, that.municipalityId);
+			&& Objects.equals(status, that.status) && Objects.equals(municipalityName, that.municipalityName);
 
 	}
 }

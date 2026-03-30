@@ -37,7 +37,7 @@ class UserMapperTest {
 		assertThat(result).isNotNull();
 		assertThat(result.getEmail()).isEqualTo(email);
 		assertThat(result.getPhoneNumber()).isEqualTo(phoneNumber);
-		assertThat(result.getMunicipalityId()).isEqualTo(municipalityId);
+		assertThat(result.getMunicipalityName()).isEqualTo("Sundsvall");
 		assertThat(result.getStatus()).isEqualTo(status);
 	}
 
@@ -46,13 +46,13 @@ class UserMapperTest {
 		// Arrange
 		final var email = "TestMail123@mail.se";
 		final var phoneNumber = "99070121212";
-		final var municipalityId = "2281";
+		final var municipalityName = "Sundsvall";
 		final var status = "ACTIVE";
 		final String password = "password";
 
 		final var userRequest = UserRequest.create().withEmail(email)
 			.withPhoneNumber(phoneNumber)
-			.withMunicipalityId(municipalityId)
+			.withMunicipalityName(municipalityName)
 			.withStatus(status);
 		// Act
 		final var result = userMapper.toUserEntity(userRequest, password);
@@ -60,7 +60,7 @@ class UserMapperTest {
 		assertThat(result).isNotNull();
 		assertThat(result.getEmail()).isEqualTo(email);
 		assertThat(result.getPhoneNumber()).isEqualTo(phoneNumber);
-		assertThat(result.getMunicipalityId()).isEqualTo(municipalityId);
+		assertThat(result.getMunicipalityId()).isEqualTo("2281");
 		assertThat(result.getStatus()).isEqualTo(Status.valueOf(status));
 		assertThat(result.getPassword()).isEqualTo(password);
 	}

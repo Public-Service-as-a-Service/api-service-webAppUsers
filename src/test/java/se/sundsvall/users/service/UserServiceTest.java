@@ -13,6 +13,7 @@ import se.sundsvall.users.api.model.UserRequest;
 import se.sundsvall.users.api.model.UserResponse;
 import se.sundsvall.users.integration.db.UserRepository;
 import se.sundsvall.users.integration.db.model.UserEntity;
+import se.sundsvall.users.integration.db.model.enums.Role;
 import se.sundsvall.users.integration.db.model.enums.Status;
 import se.sundsvall.users.service.Mapper.UserMapper;
 import se.sundsvall.users.utility.PasswordEncryption;
@@ -89,7 +90,7 @@ class UserServiceTest {
 		var userRequest = UserRequest.create()
 			.withEmail(email)
 			.withPhoneNumber(phoneNumber)
-			.withMunicipalityId(municipalityId)
+			.withMunicipalityName("Sundsvall")
 			.withStatus(status);
 
 		var userEntity = UserEntity.create()
@@ -101,7 +102,7 @@ class UserServiceTest {
 		var userResponse = UserResponse.create()
 			.withEmail(email)
 			.withPhoneNumber(phoneNumber)
-			.withMunicipalityId(municipalityId)
+			.withMunicipalityName("Sundsvall")
 			.withStatus(status);
 
 		when(userRepositoryMock.findByEmail(email)).thenReturn(Optional.empty());
@@ -131,7 +132,7 @@ class UserServiceTest {
 		final var userRequestMock = UpdateUserRequest.create()
 			.withEmail(email)
 			.withPhoneNumber(phoneNumber)
-			.withMunicipalityId(municipalityId)
+			.withMunicipalityName("Sundsvall")
 			.withStatus(status);
 		final var userEntity = UserEntity.create().withId(id).withEmail(email)
 			.withPhoneNumber(phoneNumber)
@@ -139,12 +140,13 @@ class UserServiceTest {
 			.withStatus(Status.valueOf(status));
 		final var userResponseMock = UserResponse.create().withId(id).withEmail(email)
 			.withPhoneNumber(phoneNumber)
-			.withMunicipalityId(municipalityId)
+			.withMunicipalityName("Sundsvall")
 			.withStatus(status);
 		// Mock
 		when(userRepositoryMock.findById(id)).thenReturn(Optional.of(userEntity));
 		when(userRepositoryMock.save(userEntity)).thenReturn(userEntity);
 		when(userMapperMock.toUserResponse(userEntity)).thenReturn(userResponseMock);
+		when(userMapperMock.resolveMunicipalityId("Sundsvall")).thenReturn(municipalityId);
 
 		// Act
 		final var updatedUser = userService.updateUserById(userRequestMock, id);
@@ -164,7 +166,7 @@ class UserServiceTest {
 		final var status = "ACTIVE";
 		final var userRequestMock = UpdateUserRequest.create()
 			.withPhoneNumber(phoneNumber)
-			.withMunicipalityId(municipalityId)
+			.withMunicipalityName("Sundsvall")
 			.withStatus(status);
 		final var userEntity = UserEntity.create().withId(id)
 			.withPhoneNumber(phoneNumber)
@@ -172,13 +174,13 @@ class UserServiceTest {
 			.withStatus(Status.valueOf(status));
 		final var userResponseMock = UserResponse.create().withId(id)
 			.withPhoneNumber(phoneNumber)
-			.withMunicipalityId(municipalityId)
+			.withMunicipalityName("Sundsvall")
 			.withStatus(status);
 		// Mock
 		when(userRepositoryMock.findById(id)).thenReturn(Optional.of(userEntity));
-
 		when(userRepositoryMock.save(userEntity)).thenReturn(userEntity);
 		when(userMapperMock.toUserResponse(userEntity)).thenReturn(userResponseMock);
+		when(userMapperMock.resolveMunicipalityId("Sundsvall")).thenReturn(municipalityId);
 
 		// Act
 		final var updatedUser = userService.updateUserById(userRequestMock, id);
@@ -194,11 +196,13 @@ class UserServiceTest {
 
 		// Arrange
 		final var email = "Test@testmail.se";
+		when(userRepositoryMock.findByEmail(email)).thenReturn(Optional.of(UserEntity.create().withEmail(email).withRole(Role.USER)));
 
 		// Act
 		userService.deleteUserByEmail(email);
 
 		// Verify/Assert
+		verify(userRepositoryMock).findByEmail(email);
 		verify(userRepositoryMock).deleteByEmail(email);
 
 	}
@@ -208,11 +212,13 @@ class UserServiceTest {
 
 		// Arrange
 		final var personalNumber = "198001011234";
+		when(userRepositoryMock.findByEmail(personalNumber)).thenReturn(Optional.of(UserEntity.create().withEmail(personalNumber).withRole(Role.USER)));
 
 		// Act
 		userService.deleteUserByEmail(personalNumber);
 
 		// Verify/Assert
+		verify(userRepositoryMock).findByEmail(personalNumber);
 		verify(userRepositoryMock).deleteByEmail(personalNumber);
 
 	}
@@ -222,11 +228,13 @@ class UserServiceTest {
 
 		// Arrange
 		final var id = 1L;
+		when(userRepositoryMock.findById(id)).thenReturn(Optional.of(UserEntity.create().withId(id).withRole(Role.USER)));
 
 		// Act
 		userService.deleteUserById(id);
 
 		// Verify/Assert
+		verify(userRepositoryMock).findById(id);
 		verify(userRepositoryMock).deleteById(id);
 
 	}
@@ -296,7 +304,7 @@ class UserServiceTest {
 		final var userResponse1 = UserResponse.create().withId(1L).withEmail("user1@test.se");
 		final var userResponse2 = UserResponse.create().withId(2L).withEmail("user2@test.se");
 
-		when(userRepositoryMock.findAll()).thenReturn(List.of(userEntity1, userEntity2));
+		when(userRepositoryMock.findAllByRole(Role.USER)).thenReturn(List.of(userEntity1, userEntity2));
 		when(userMapperMock.toUserResponse(userEntity1)).thenReturn(userResponse1);
 		when(userMapperMock.toUserResponse(userEntity2)).thenReturn(userResponse2);
 
@@ -305,7 +313,7 @@ class UserServiceTest {
 		assertThat(result)
 			.hasSize(2)
 			.containsExactly(userResponse1, userResponse2);
-		verify(userRepositoryMock).findAll();
+		verify(userRepositoryMock).findAllByRole(Role.USER);
 		verify(userMapperMock).toUserResponse(userEntity1);
 		verify(userMapperMock).toUserResponse(userEntity2);
 	}

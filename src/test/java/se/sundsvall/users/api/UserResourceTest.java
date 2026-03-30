@@ -52,13 +52,13 @@ class UserResourceTest {
 
 		final var userRequest = UserRequest.create()
 			.withEmail("test@testmail.com")
-			.withMunicipalityId("2281")
+			.withMunicipalityName("Sundsvall")
 			.withPhoneNumber("0701740649")
 			.withPassword("password")
 			.withStatus("ACTIVE");
 		final var userResponse = UserResponse.create()
 			.withEmail("test@testmail.com")
-			.withMunicipalityId("2281")
+			.withMunicipalityName("Sundsvall")
 			.withPhoneNumber("0701740649")
 			.withStatus("ACTIVE")
 			.withRole("user");
@@ -85,7 +85,7 @@ class UserResourceTest {
 		final var email = "kalle.kula@sundsvall.se";
 		final var userResponse = UserResponse.create()
 			.withEmail(email)
-			.withMunicipalityId("2281")
+			.withMunicipalityName("Sundsvall")
 			.withPhoneNumber("0701740629")
 			.withStatus("ACTIVE")
 			.withRole("user");
@@ -109,7 +109,7 @@ class UserResourceTest {
 		final var id = 1L;
 		final var userResponse = UserResponse.create()
 			.withId(id)
-			.withMunicipalityId("2281")
+			.withMunicipalityName("Sundsvall")
 			.withPhoneNumber("0701740629")
 			.withStatus("ACTIVE")
 			.withRole("user");
@@ -148,13 +148,13 @@ class UserResourceTest {
 		final var id = 1L;
 		final var userRequest = UpdateUserRequest.create()
 			.withEmail("test@test.com")
-			.withMunicipalityId("2281")
+			.withMunicipalityName("Sundsvall")
 			.withPhoneNumber("0701740669")
 			.withStatus("ACTIVE")
 			.withRole("user");
 		final var userResponse = UserResponse.create()
 			.withEmail("test@test.com")
-			.withMunicipalityId("2281")
+			.withMunicipalityName("Sundsvall")
 			.withPhoneNumber("0701740619")
 			.withStatus("ACTIVE")
 			.withRole("user");
