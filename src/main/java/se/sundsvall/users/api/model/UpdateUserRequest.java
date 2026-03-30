@@ -5,8 +5,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import java.util.Objects;
 import se.sundsvall.dept44.common.validators.annotation.ValidMobileNumber;
-import se.sundsvall.dept44.common.validators.annotation.ValidMunicipalityId;
 import se.sundsvall.users.api.validation.ValidEnum;
+import se.sundsvall.users.api.validation.ValidMunicipalityName;
 import se.sundsvall.users.integration.db.model.enums.Role;
 import se.sundsvall.users.integration.db.model.enums.Status;
 
@@ -22,10 +22,10 @@ public class UpdateUserRequest {
 	@ValidMobileNumber(message = "must be a valid mobile number")
 	private String phoneNumber;
 
-	@Schema(description = "Kommun", example = "2281")
+	@Schema(description = "Kommunnamn", example = "Sundsvall")
 	@NotBlank(message = "cannot be blank")
-	@ValidMunicipalityId(message = "must be a valid Municipality-ID")
-	private String municipalityId;
+	@ValidMunicipalityName(message = "must be a valid municipality name")
+	private String municipalityName;
 
 	@Schema(description = "Status", example = "ACTIVE")
 	@ValidEnum(message = "must be ACTIVE, INACTIVE or SUSPENDED", enumClass = Status.class, ignoreCase = true)
@@ -65,16 +65,16 @@ public class UpdateUserRequest {
 		return this;
 	}
 
-	public String getMunicipalityId() {
-		return municipalityId;
+	public String getMunicipalityName() {
+		return municipalityName;
 	}
 
-	public void setMunicipalityId(String municipalityId) {
-		this.municipalityId = municipalityId;
+	public void setMunicipalityName(String municipalityName) {
+		this.municipalityName = municipalityName;
 	}
 
-	public UpdateUserRequest withMunicipalityId(String municipalityId) {
-		this.municipalityId = municipalityId;
+	public UpdateUserRequest withMunicipalityName(String municipalityName) {
+		this.municipalityName = municipalityName;
 		return this;
 	}
 
@@ -106,7 +106,7 @@ public class UpdateUserRequest {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(email, municipalityId, phoneNumber, status, role);
+		return Objects.hash(email, municipalityName, phoneNumber, status, role);
 	}
 
 	@Override
@@ -121,7 +121,7 @@ public class UpdateUserRequest {
 		return Objects.equals(email, that.email)
 			&& Objects.equals(phoneNumber, that.phoneNumber)
 			&& Objects.equals(status, that.status)
-			&& Objects.equals(municipalityId, that.municipalityId)
+			&& Objects.equals(municipalityName, that.municipalityName)
 			&& Objects.equals(role, that.role);
 	}
 }

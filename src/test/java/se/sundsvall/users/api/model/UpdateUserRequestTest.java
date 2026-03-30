@@ -21,16 +21,16 @@ class UpdateUserRequestTest {
 	@Test
 	void testBuildMethod() {
 		final var phoneNumber = "phoneNumber";
-		final var municipalityId = "municipalityId";
+		final var municipalityName = "municipalityName";
 		final var status = "ACTIVE";
 
 		final var updateUserRequest = UpdateUserRequest.create()
 			.withPhoneNumber(phoneNumber)
-			.withMunicipalityId(municipalityId)
+			.withMunicipalityName(municipalityName)
 			.withStatus(status);
 
 		assertThat(updateUserRequest.getPhoneNumber()).isEqualTo(phoneNumber);
-		assertThat(updateUserRequest.getMunicipalityId()).isEqualTo(municipalityId);
+		assertThat(updateUserRequest.getMunicipalityName()).isEqualTo(municipalityName);
 		assertThat(updateUserRequest.getStatus()).isEqualTo(status);
 	}
 

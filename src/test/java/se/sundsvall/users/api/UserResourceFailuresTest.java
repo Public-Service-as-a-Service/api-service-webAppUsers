@@ -52,7 +52,7 @@ class UserResourceFailuresTest {
 		final var userRequest = UserRequest.create()
 			.withEmail("notamailtestcom")
 			.withPhoneNumber("number0000000000")
-			.withMunicipalityId("id2222")
+			.withMunicipalityName("id2222")
 			.withStatus("status");
 		// Act
 		final var response = webTestClient.post()
@@ -77,7 +77,7 @@ class UserResourceFailuresTest {
 				tuple("status", "must be ACTIVE, INACTIVE or SUSPENDED"),
 				tuple("phoneNumber", "must be a valid mobile number"),
 				tuple("password", "must not be blank"),
-				tuple("municipalityId", "must be a valid Municipality-ID"));
+				tuple("municipalityName", "must be a valid municipality name"));
 
 	}
 
@@ -112,7 +112,7 @@ class UserResourceFailuresTest {
 		final var userRequest = UpdateUserRequest.create()
 			.withEmail("test@testmail.com")
 			.withPhoneNumber("numberplate")
-			.withMunicipalityId("municipalityId")
+			.withMunicipalityName("municipalityId")
 			.withStatus("status");
 
 		// act
@@ -134,7 +134,7 @@ class UserResourceFailuresTest {
 			.containsExactlyInAnyOrder(
 				tuple("status", "must be ACTIVE, INACTIVE or SUSPENDED"),
 				tuple("phoneNumber", "must be a valid mobile number"),
-				tuple("municipalityId", "must be a valid Municipality-ID"),
+				tuple("municipalityName", "must be a valid municipality name"),
 				tuple("role", "must be USER or ADMIN"));
 	}
 }

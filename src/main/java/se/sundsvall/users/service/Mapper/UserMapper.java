@@ -2,6 +2,7 @@ package se.sundsvall.users.service.Mapper;
 
 import java.util.Optional;
 import org.springframework.stereotype.Component;
+import se.sundsvall.dept44.util.MunicipalityUtils;
 import se.sundsvall.users.api.model.UserRequest;
 import se.sundsvall.users.api.model.UserResponse;
 import se.sundsvall.users.integration.db.model.UserEntity;
@@ -17,7 +18,9 @@ public class UserMapper {
 				.withEmail(entity.getEmail())
 				.withId(entity.getId())
 				.withPhoneNumber(entity.getPhoneNumber())
-				.withMunicipalityId(entity.getMunicipalityId())
+				.withMunicipalityName(Optional.ofNullable(MunicipalityUtils.findById(entity.getMunicipalityId()))
+					.map(m -> m.name())
+					.orElse(null))
 				.withStatus(String.valueOf(entity.getStatus()))
 				.withRole(entity.getRole() != null ? entity.getRole().name() : null))
 			.orElse(null);
@@ -28,12 +31,19 @@ public class UserMapper {
 			.map(request -> UserEntity.create()
 				.withEmail(request.getEmail())
 				.withPhoneNumber(request.getPhoneNumber())
-				.withMunicipalityId(request.getMunicipalityId())
+				.withMunicipalityId(resolveMunicipalityId(request.getMunicipalityName()))
 				.withPassword(encryptedPassword)
 				.withStatus(Status.valueOf(request.getStatus().toUpperCase()))
 				.withRole(request.getRole() != null
 					? Role.valueOf(request.getRole().toUpperCase())
 					: Role.USER))
 			.orElse(null);
+	}
+
+	private String resolveMunicipalityId(final String input) {
+		if (MunicipalityUtils.existsById(input)) {
+			return input;
+		}
+		return MunicipalityUtils.findByName(input).id();
 	}
 }

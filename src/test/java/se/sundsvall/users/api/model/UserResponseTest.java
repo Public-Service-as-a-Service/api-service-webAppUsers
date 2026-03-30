@@ -22,18 +22,18 @@ class UserResponseTest {
 	void testBuildMethod() {
 		final var email = "email";
 		final var phoneNumber = "phoneNumber";
-		final var municipalityId = "municipalityId";
+		final var municipalityName = "municipalityName";
 		final var status = "ACTIVE";
 
 		final var userResponse = UserResponse.create()
 			.withEmail(email)
 			.withPhoneNumber(phoneNumber)
-			.withMunicipalityId(municipalityId)
+			.withMunicipalityName(municipalityName)
 			.withStatus(status);
 
 		assertThat(userResponse.getEmail()).isEqualTo(email);
 		assertThat(userResponse.getPhoneNumber()).isEqualTo(phoneNumber);
-		assertThat(userResponse.getMunicipalityId()).isEqualTo(municipalityId);
+		assertThat(userResponse.getMunicipalityName()).isEqualTo(municipalityName);
 		assertThat(userResponse.getStatus()).isEqualTo(status);
 	}
 
