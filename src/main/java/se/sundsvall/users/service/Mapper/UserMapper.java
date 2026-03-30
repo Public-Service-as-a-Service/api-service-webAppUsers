@@ -40,7 +40,7 @@ public class UserMapper {
 			.orElse(null);
 	}
 
-	private String resolveMunicipalityId(final String input) {
+	public String resolveMunicipalityId(final String input) {
 		if (MunicipalityUtils.existsById(input)) {
 			return input;
 		}

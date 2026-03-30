@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import se.sundsvall.dept44.problem.*;
-import se.sundsvall.dept44.util.MunicipalityUtils;
 import se.sundsvall.users.api.model.UpdateUserRequest;
 import se.sundsvall.users.api.model.UserRequest;
 import se.sundsvall.users.api.model.UserResponse;
@@ -76,7 +75,7 @@ public class UserService {
 			.withId(id)
 			.withEmail(userRequest.getEmail())
 			.withPhoneNumber(userRequest.getPhoneNumber())
-			.withMunicipalityId(resolveMunicipalityId(userRequest.getMunicipalityName()))
+			.withMunicipalityId(userMapper.resolveMunicipalityId(userRequest.getMunicipalityName()))
 			.withStatus(Status.valueOf(userRequest.getStatus().toUpperCase()));
 
 		if (userRequest.getRole() != null) {
@@ -86,13 +85,6 @@ public class UserService {
 		userRepository.save(updated);
 
 		return userMapper.toUserResponse(userEntity);
-	}
-
-	private String resolveMunicipalityId(final String input) {
-		if (MunicipalityUtils.existsById(input)) {
-			return input;
-		}
-		return MunicipalityUtils.findByName(input).id();
 	}
 
 	// DELETE

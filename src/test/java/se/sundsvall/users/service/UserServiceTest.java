@@ -146,6 +146,7 @@ class UserServiceTest {
 		when(userRepositoryMock.findById(id)).thenReturn(Optional.of(userEntity));
 		when(userRepositoryMock.save(userEntity)).thenReturn(userEntity);
 		when(userMapperMock.toUserResponse(userEntity)).thenReturn(userResponseMock);
+		when(userMapperMock.resolveMunicipalityId("Sundsvall")).thenReturn(municipalityId);
 
 		// Act
 		final var updatedUser = userService.updateUserById(userRequestMock, id);
@@ -177,9 +178,9 @@ class UserServiceTest {
 			.withStatus(status);
 		// Mock
 		when(userRepositoryMock.findById(id)).thenReturn(Optional.of(userEntity));
-
 		when(userRepositoryMock.save(userEntity)).thenReturn(userEntity);
 		when(userMapperMock.toUserResponse(userEntity)).thenReturn(userResponseMock);
+		when(userMapperMock.resolveMunicipalityId("Sundsvall")).thenReturn(municipalityId);
 
 		// Act
 		final var updatedUser = userService.updateUserById(userRequestMock, id);
