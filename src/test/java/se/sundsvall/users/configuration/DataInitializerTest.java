@@ -8,13 +8,13 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 import se.sundsvall.users.integration.db.UserRepository;
 import se.sundsvall.users.integration.db.model.UserEntity;
 import se.sundsvall.users.integration.db.model.enums.Role;
 import se.sundsvall.users.integration.db.model.enums.Status;
 import se.sundsvall.users.service.UserService;
-import se.sundsvall.users.utility.PasswordEncryption;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -36,18 +36,20 @@ class DataInitializerTest {
 	private UserService userService;
 
 	@Mock
-	private PasswordEncryption passwordEncryption;
+	private PasswordEncoder passwordEncoder;
 
 	@BeforeEach
 	void setUp() {
 		ReflectionTestUtils.setField(dataInitializer, "email", "test@example.se");
 		ReflectionTestUtils.setField(dataInitializer, "password", "password");
+		ReflectionTestUtils.setField(dataInitializer, "phoneNumber", "0701234567");
+		ReflectionTestUtils.setField(dataInitializer, "municipalityId", "2281");
 	}
 
 	@Test
 	void createUserWhenNotExists() {
 		when(userRepository.findByEmail("test@example.se")).thenReturn(Optional.empty());
-		when(passwordEncryption.encrypt("password")).thenReturn("encryptedPassword");
+		when(passwordEncoder.encode("password")).thenReturn("hashedpassword");
 
 		dataInitializer.run();
 
@@ -60,7 +62,7 @@ class DataInitializerTest {
 		assertThat(savedUser.getPhoneNumber()).isEqualTo("0701234567");
 		assertThat(savedUser.getStatus()).isEqualTo(Status.ACTIVE);
 		assertThat(savedUser.getRole()).isEqualTo(Role.ADMIN);
-		assertThat(savedUser.getPassword()).isEqualTo("encryptedPassword");
+		assertThat(savedUser.getPassword()).isEqualTo("hashedpassword");
 	}
 
 	@Test
@@ -84,13 +86,13 @@ class DataInitializerTest {
 	}
 
 	@Test
-	void encryptPasswordBeforeSaving() {
+	void hashPasswordBeforeSaving() {
 		when(userRepository.findByEmail("test@example.se")).thenReturn(Optional.empty());
-		when(passwordEncryption.encrypt("password")).thenReturn("encryptedPassword");
+		when(passwordEncoder.encode("password")).thenReturn("hashedPassword");
 
 		dataInitializer.run();
 
-		verify(passwordEncryption).encrypt("password");
-		verify(userRepository).save(argThat(user -> user.getPassword().equals("encryptedPassword")));
+		verify(passwordEncoder).encode("password");
+		verify(userRepository).save(argThat(user -> user.getPassword().equals("hashedPassword")));
 	}
 }

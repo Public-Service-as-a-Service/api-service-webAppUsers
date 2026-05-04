@@ -3,13 +3,13 @@ package se.sundsvall.users.configuration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import se.sundsvall.users.integration.db.UserRepository;
 import se.sundsvall.users.integration.db.model.UserEntity;
 import se.sundsvall.users.integration.db.model.enums.Role;
 import se.sundsvall.users.integration.db.model.enums.Status;
 import se.sundsvall.users.service.UserService;
-import se.sundsvall.users.utility.PasswordEncryption;
 
 @Component
 @Profile("!(junit | it)")
@@ -18,15 +18,19 @@ public class DataInitializer implements CommandLineRunner {
 	String email;
 	@Value("${user.credentials.password}")
 	String password;
+	@Value("${user.credentials.phoneNumber}")
+	String phoneNumber;
+	@Value("${user.credentials.municipalityId}")
+	String municipalityId;
 
 	UserRepository userRepository;
 	UserService userService;
-	PasswordEncryption passwordEncryption;
+	PasswordEncoder passwordEncoder;
 
-	public DataInitializer(UserRepository userRepository, UserService userService, PasswordEncryption passwordEncryption) {
+	public DataInitializer(UserRepository userRepository, UserService userService, PasswordEncoder passwordEncoder) {
 		this.userRepository = userRepository;
 		this.userService = userService;
-		this.passwordEncryption = passwordEncryption;
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	@Override
@@ -35,11 +39,11 @@ public class DataInitializer implements CommandLineRunner {
 		if (existing.isEmpty()) {
 			userRepository.save(UserEntity.create()
 				.withEmail(email)
-				.withMunicipalityId("2281")
-				.withPhoneNumber("0701234567")
+				.withMunicipalityId(municipalityId)
+				.withPhoneNumber(phoneNumber)
 				.withStatus(Status.ACTIVE)
 				.withRole(Role.ADMIN)
-				.withPassword(passwordEncryption.encrypt(password)));
+				.withPassword(passwordEncoder.encode(password)));
 		} else if (existing.get().getRole() != Role.ADMIN) {
 			existing.get().setRole(Role.ADMIN);
 			userRepository.save(existing.get());

@@ -3,6 +3,7 @@ package se.sundsvall.users.service;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import se.sundsvall.dept44.problem.*;
 import se.sundsvall.users.api.model.UpdateUserRequest;
@@ -12,7 +13,6 @@ import se.sundsvall.users.integration.db.UserRepository;
 import se.sundsvall.users.integration.db.model.enums.Role;
 import se.sundsvall.users.integration.db.model.enums.Status;
 import se.sundsvall.users.service.Mapper.UserMapper;
-import se.sundsvall.users.utility.PasswordEncryption;
 
 import static java.lang.String.format;
 import static org.springframework.http.HttpStatus.CONFLICT;
@@ -26,21 +26,21 @@ public class UserService {
 
 	private final UserMapper userMapper;
 
-	private final PasswordEncryption passwordEncryption;
+	private final PasswordEncoder passwordEncoder;
 
 	private final String USER_NOT_FOUND = "user %s was not found";
 
-	public UserService(UserRepository userRepository, UserMapper userMapper, PasswordEncryption passwordEncryption) {
+	public UserService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
 		this.userRepository = userRepository;
 		this.userMapper = userMapper;
-		this.passwordEncryption = passwordEncryption;
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	public UserResponse createUser(UserRequest userRequest) {
 
 		if (userRepository.findByEmail(userRequest.getEmail()).isEmpty()) {
-			String encryptedPassword = passwordEncryption.encrypt(userRequest.getPassword());
-			final var userEntity = userRepository.save(userMapper.toUserEntity(userRequest, encryptedPassword));
+			String hashedPassword = passwordEncoder.encode(userRequest.getPassword());
+			final var userEntity = userRepository.save(userMapper.toUserEntity(userRequest, hashedPassword));
 			return userMapper.toUserResponse(userEntity);
 		}
 		String USER_ALREADY_EXISTING = "user already exists";
@@ -62,7 +62,7 @@ public class UserService {
 	public void updateUserPasswordById(Long id, String password) {
 		var userEntity = userRepository.findById(id)
 			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, format(USER_NOT_FOUND, id)));
-		userEntity.setPassword(passwordEncryption.encrypt(password));
+		userEntity.setPassword(passwordEncoder.encode(password));
 		userRepository.save(userEntity);
 	}
 

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import se.sundsvall.dept44.problem.*;
 import se.sundsvall.users.api.model.UpdateUserRequest;
 import se.sundsvall.users.api.model.UserRequest;
@@ -16,7 +17,6 @@ import se.sundsvall.users.integration.db.model.UserEntity;
 import se.sundsvall.users.integration.db.model.enums.Role;
 import se.sundsvall.users.integration.db.model.enums.Status;
 import se.sundsvall.users.service.Mapper.UserMapper;
-import se.sundsvall.users.utility.PasswordEncryption;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -32,7 +32,7 @@ class UserServiceTest {
 	@Mock
 	private UserMapper userMapperMock;
 	@Mock
-	private PasswordEncryption passwordEncryptionMock;
+	private PasswordEncoder passwordEncoderMock;
 
 	@InjectMocks
 	private UserService userService;
@@ -109,7 +109,7 @@ class UserServiceTest {
 		when(userRepositoryMock.save(userEntity)).thenReturn(userEntity);
 		when(userMapperMock.toUserEntity(eq(userRequest), anyString())).thenReturn(userEntity);
 		when(userMapperMock.toUserResponse(userEntity)).thenReturn(userResponse);
-		when(passwordEncryptionMock.encrypt(userRequest.getPassword())).thenReturn("encryptedPassword");
+		when(passwordEncoderMock.encode(userRequest.getPassword())).thenReturn("hashedPassword");
 		// Act
 		var created = userService.createUser(userRequest);
 
