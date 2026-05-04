@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import se.sundsvall.dept44.problem.Problem;
 import se.sundsvall.users.api.model.JwtResponse;
 import se.sundsvall.users.api.model.LoginRequest;
@@ -13,7 +14,6 @@ import se.sundsvall.users.integration.db.UserRepository;
 import se.sundsvall.users.integration.db.model.UserEntity;
 import se.sundsvall.users.integration.db.model.enums.Status;
 import se.sundsvall.users.utility.JwtUtil;
-import se.sundsvall.users.utility.PasswordEncryption;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -24,7 +24,7 @@ class AuthenticationServiceTest {
 	@Mock
 	private UserRepository userRepositoryMock;
 	@Mock
-	private PasswordEncryption passwordEncryptionMock;
+	private PasswordEncoder passwordEncoderMock;
 	@Mock
 	private JwtUtil jwtServiceMock;
 	@InjectMocks
@@ -36,14 +36,14 @@ class AuthenticationServiceTest {
 			.withPassword("password")
 			.withEmail("test@email.se");
 		final var token = "token";
-		final var encryptedPassword = "encryptedPassword";
+		final var hashedPassword = "hashedPassword";
 		final UserEntity userEntity = UserEntity.create()
 			.withEmail("test@email.se")
-			.withPassword("encryptedPassword");
+			.withPassword(hashedPassword);
 		when(userRepositoryMock.findByEmail(loginRequest.getEmail()))
 			.thenReturn(Optional.of(userEntity));
-		when(passwordEncryptionMock.decrypt(encryptedPassword))
-			.thenReturn("password");
+		when(passwordEncoderMock.matches("password", hashedPassword))
+			.thenReturn(true);
 		when(jwtServiceMock.generateToken(loginRequest.getEmail(), "USER"))
 			.thenReturn(token);
 
@@ -57,16 +57,16 @@ class AuthenticationServiceTest {
 		final var loginRequest = LoginRequest.create()
 			.withPassword("password")
 			.withEmail("test@email.se");
-		final var encryptedPassword = "encryptedPassword";
+		final var hashedPassword = "hashedPassword";
 		final var userEntity = UserEntity.create()
 			.withEmail("test@email.se")
-			.withPassword(encryptedPassword)
+			.withPassword(hashedPassword)
 			.withStatus(Status.SUSPENDED);
 
 		when(userRepositoryMock.findByEmail(loginRequest.getEmail()))
 			.thenReturn(Optional.of(userEntity));
-		when(passwordEncryptionMock.decrypt(encryptedPassword))
-			.thenReturn("password");
+		when(passwordEncoderMock.matches("password", hashedPassword))
+			.thenReturn(true);
 
 		final var exception = assertThrows(Throwable.class,
 			() -> authenticationService.login(loginRequest));
@@ -81,16 +81,16 @@ class AuthenticationServiceTest {
 		final var loginRequest = LoginRequest.create()
 			.withPassword("password")
 			.withEmail("test@email.se");
-		final var encryptedPassword = "encryptedPassword";
+		final var hashedPassword = "hashedPassword";
 		final var userEntity = UserEntity.create()
 			.withEmail("test@email.se")
-			.withPassword(encryptedPassword)
+			.withPassword(hashedPassword)
 			.withStatus(Status.INACTIVE);
 
 		when(userRepositoryMock.findByEmail(loginRequest.getEmail()))
 			.thenReturn(Optional.of(userEntity));
-		when(passwordEncryptionMock.decrypt(encryptedPassword))
-			.thenReturn("password");
+		when(passwordEncoderMock.matches("password", hashedPassword))
+			.thenReturn(true);
 
 		final var exception = assertThrows(Throwable.class,
 			() -> authenticationService.login(loginRequest));
